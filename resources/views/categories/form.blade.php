@@ -1,6 +1,7 @@
 <div class="mb-3">
   <label class="form-label">Name</label>
   <input name="name" class="form-control" value="{{ old('name', $category->name ?? '') }}" required>
+  @error('name')<div class="text-danger small mt-1">{{ $message }}</div>@enderror
 </div>
 
 <div class="mb-3">
@@ -9,6 +10,7 @@
     <option value="expense" {{ (old('type', $category->type ?? '') == 'expense') ? 'selected' : '' }}>Expense</option>
     <option value="income" {{ (old('type', $category->type ?? '') == 'income') ? 'selected' : '' }}>Income</option>
   </select>
+  @error('type')<div class="text-danger small mt-1">{{ $message }}</div>@enderror
 </div>
 
 <div class="mb-3">

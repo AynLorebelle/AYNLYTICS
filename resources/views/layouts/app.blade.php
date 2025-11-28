@@ -3,46 +3,336 @@
   <head>
     <meta charset="utf-8">
     <meta name="viewport" content="width=device-width, initial-scale=1">
-    <title>@yield('title','AYNTRACK')</title>
+    <title>@yield('title','AYNYLTICS')</title>
     <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css" rel="stylesheet">
-    @vite(['resources/css/app.css','resources/css/custom-auth.css'])
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.10.5/font/bootstrap-icons.css">
+    @vite(['resources/css/app.css','resources/css/site.css'])
     @stack('styles')
+     <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+        
+        body {
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+            background-color: #0a1628;
+            color: #ffffff;
+            min-height: 100vh;
+        }
+        
+        .header {
+            border-bottom: 1px solid #1f2937;
+            background-color: rgba(10, 22, 40, 0.95);
+            position: sticky;
+            top: 0;
+            z-index: 50;
+        }
+        
+        .header-container {
+            max-width: 1280px;
+            margin: 0 auto;
+            padding: 0 24px;
+        }
+        
+        .header-content {
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+            height: 64px;
+        }
+        
+        .logo-section {
+            display: flex;
+            align-items: center;
+            gap: 12px;
+        }
+        
+        .logo-icon {
+            width: 40px;
+            height: 40px;
+            background: linear-gradient(135deg, #60a5fa, #3b82f6);
+            border-radius: 8px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 20px;
+            font-weight: bold;
+        }
+        .logo-icon img {
+    width: 100%;
+    height: auto;
+    object-fit: contain;
+}
+        
+        .logo-text h1 {
+            font-size: 20px;
+            font-weight: bold;
+            color: #d4a574;
+            letter-spacing: 0.05em;
+        }
+        
+        .logo-text p {
+            font-size: 12px;
+            color: #9ca3af;
+        }
+        
+        .nav-button {
+            padding: 8px;
+            color: white;
+            background: transparent;
+            border: none;
+            cursor: pointer;
+        }
+        
+        .menu-open {
+        border-top: 1px solid #1f2937;
+    background-color: #0a1628;
+    padding: 16px 24px;
+    display: flex;
+    flex-direction: column;
+    align-items: flex-center;  
+        }
+        
+        .menu-nav {
+            display: flex;
+            flex-direction: column;
+            gap: 8px;
+        }
+        
+        .menu-item {
+            display: flex;
+            align-items: center;
+            gap: 8px;
+            padding: 12px 16px;
+            border-radius: 8px;
+            background-color: transparent;
+            color: #9ca3af;
+            border: none;
+            cursor: pointer;
+            font-size: 14px;
+            width: 100%;
+            text-align: left;
+            transition: all 0.2s;
+             width: auto;       /* <-- REMOVE full width */
+    text-align: left;  /* can stay */
+        }
+        
+        .menu-item:hover {
+            background-color: #1f2937;
+            color: white;
+        }
+        
+        .menu-item.active {
+            background-color: #2563eb;
+            color: white;
+        }
+        
+        .main-content {
+            max-width: 1280px;
+            margin: 0 auto;
+            padding: 32px 24px;
+        }
+        
+        .welcome-section {
+            margin-bottom: 32px;
+        }
+        
+        .welcome-section h2 {
+            font-size: 28px;
+            font-weight: bold;
+            margin-bottom: 8px;
+        }
+        
+        .welcome-section p {
+            color: #9ca3af;
+        }
+        
+        .stats-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(250px, 1fr));
+            gap: 20px;
+            margin-bottom: 32px;
+        }
+        
+        .stat-card {
+            background-color: #111827;
+            border-radius: 12px;
+            padding: 24px;
+            border: 1px solid #1f2937;
+        }
+        
+        .stat-label {
+            color: #9ca3af;
+            font-size: 14px;
+            margin-bottom: 8px;
+        }
+        
+        .stat-row {
+            display: flex;
+            align-items: flex-end;
+            justify-content: space-between;
+        }
+        
+        .stat-value {
+            font-size: 32px;
+            font-weight: bold;
+            color: white;
+        }
+        
+        .stat-change {
+            font-size: 14px;
+            font-weight: 500;
+        }
+        
+        .stat-change.positive {
+            color: #10b981;
+        }
+        
+        .stat-change.negative {
+            color: #ef4444;
+        }
+        
+        .content-grid {
+            display: grid;
+            grid-template-columns: 1fr;
+            gap: 24px;
+        }
+        
+        .content-card {
+            background-color: #111827;
+            border-radius: 12px;
+            padding: 24px;
+            border: 1px solid #1f2937;
+        }
+        
+        .card-header {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            margin-bottom: 24px;
+        }
+        
+        .card-header h3 {
+            font-size: 20px;
+            font-weight: bold;
+        }
+        
+        .btn-primary {
+            background-color: #2563eb;
+            color: white;
+            border: none;
+            border-radius: 8px;
+            padding: 8px 16px;
+            display: flex;
+            align-items: center;
+            gap: 8px;
+            cursor: pointer;
+            font-size: 14px;
+        }
+        
+        .btn-primary:hover {
+            background-color: #1d4ed8;
+        }
+        
+        .transaction-list {
+            display: flex;
+            flex-direction: column;
+            gap: 12px;
+        }
+        
+        .transaction-item {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            padding: 16px;
+            background-color: #0a1628;
+            border-radius: 8px;
+            border: 1px solid #1f2937;
+        }
+        
+        .transaction-name {
+            font-weight: 500;
+            margin-bottom: 4px;
+        }
+        
+        .transaction-date {
+            font-size: 14px;
+            color: #9ca3af;
+        }
+        
+        .transaction-amount {
+            font-weight: bold;
+            font-size: 18px;
+        }
+        
+        .transaction-amount.income {
+            color: #10b981;
+        }
+        
+        .transaction-amount.expense {
+            color: #ef4444;
+        }
+        
+        .quick-actions-grid {
+            display: grid;
+            grid-template-columns: repeat(2, 1fr);
+            gap: 12px;
+        }
+        
+        .action-button {
+            background-color: #0a1628;
+            border: 2px solid;
+            border-radius: 8px;
+            padding: 20px;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            gap: 8px;
+            cursor: pointer;
+            transition: all 0.2s;
+        }
+        
+        .action-button:hover {
+            transform: translateY(-2px);
+        }
+        
+        .action-button span {
+            font-size: 14px;
+            font-weight: 500;
+        }
+        
+        .icon {
+            width: 18px;
+            height: 18px;
+        }
+        
+        .hidden {
+            display: none;
+        }
+    </style>
   </head>
   <body>
-    <nav class="navbar navbar-expand-lg ayn-navbar">
-      <div class="container">
-        <a class="navbar-brand" href="{{ route('app.dashboard') }}">
-          <img src="{{ asset('public\build\image\1.png') }}" alt="AYNLYTICS" style="height:42px;margin-right:8px;vertical-align:middle;">
-          <span class="align-middle">AYNLYTICS</spangit>
-        </a>
-        
-        <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbarsExample07" aria-controls="navbarsExample07" aria-expanded="false" aria-label="Toggle navigation">
-          <span class="navbar-toggler-icon"></span>
-        </button>
-
-  <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css" rel="stylesheet">
-
-          <ul class="navbar-nav ms-auto">
-            @auth
-              <li class="nav-item dropdown">
-                <a class="nav-link dropdown-toggle" href="#" id="userMenu" data-bs-toggle="dropdown">{{ auth()->user()->name }}</a>
-                <ul class="dropdown-menu dropdown-menu-end" aria-labelledby="userMenu">
-                  <li><a class="dropdown-item" href="{{ route('profile.edit') }}">Profile</a></li>
-                  @if(auth()->user()->isAdmin())
-                    <li><a class="dropdown-item" href="{{ route('admin.users.index') }}">Admin</a></li>
-                  @endif
-                  <li>
-                    <form method="POST" action="{{ route('logout') }}">@csrf<button class="dropdown-item">Logout</button></form>
-                  </li>
-                </ul>
-              </li>
-            @else
-              <li class="nav-item"><a class="nav-link" href="{{ route('login') }}">Login</a></li>
-              @if (Route::has('register'))
-                <li class="nav-item"><a class="nav-link ayn-cta" href="{{ route('register') }}">Register</a></li>
-              @endif
-            @endauth
-          </ul>
+    
+       <!-- Header -->
+    <header class="header">
+        <div class="header-container">
+            <div class="header-content">
+                <div class="logo-section">
+                    <div class="logo-icon"><img src="{{ asset('build/image/2.png') }}" alt=""></div>
+                    <div class="logo-text">
+                        <h1>AYNLYTICS</h1>
+                        <p>Financial Planner</p>
+                    </div>
+                </div>
+                
+                <button class="nav-button" onclick="toggleMenu()">
+                    <svg class="icon" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M4 6h16M4 12h16M4 18h16"></path>
+                    </svg>
+                </button>
+            </div>
         </div>
 
         <div id="menu" class="menu-open hidden">
@@ -123,19 +413,35 @@
             </nav>
         </div>
     </header>
+      
 
-<main class="container py-4">
-  @include('partials.alerts')
-  @yield('content')
+      
+    <section class="col-md-9">
+      @include('partials.alerts')
+      @yield('content')
+    </section>
+  </div>
 </main>
 
 <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/js/bootstrap.bundle.min.js"></script>
 <script src="https://cdn.jsdelivr.net/npm/chart.js@4.4.0/dist/chart.umd.min.js"></script>
 <script>
     function toggleMenu() {
-        const menu = document.getElementById('menu');
-        menu.classList.toggle('hidden');
+      const menu = document.getElementById('menu');
+      if (!menu) return;
+      menu.classList.toggle('hidden');
     }
+  document.addEventListener('DOMContentLoaded', function(){
+    var offcanvasEl = document.getElementById('offcanvasSidebar');
+    if (offcanvasEl) {
+      offcanvasEl.querySelectorAll('.nav-link').forEach(function(link){
+        link.addEventListener('click', function(){
+          var off = bootstrap.Offcanvas.getInstance(offcanvasEl);
+          if (off) off.hide();
+        });
+      });
+    }
+  });
 </script>
 @stack('scripts')
 </body>

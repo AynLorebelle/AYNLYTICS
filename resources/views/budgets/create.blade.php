@@ -10,7 +10,7 @@
     <form action="{{ route('budgets.store') }}" method="POST">
       @csrf
       @include('budgets.form')
-      <button class="btn btn-primary mt-2">Save</button>
+      <button class="btn ayn-cta mt-2"><i class="bi bi-check2 me-1"></i>Save</button>
     </form>
   </div>
 </div>
