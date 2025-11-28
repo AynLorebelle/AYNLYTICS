@@ -34,8 +34,8 @@
         }
 
         .logo-icon {
-            width: 40px;
-            height: 40px;
+            width: 100px;
+            height: 100px;
             border-radius: 8px;
         }
 
@@ -67,23 +67,29 @@
             background: rgba(255, 255, 255, 0.08);
             backdrop-filter: blur(10px);
             border-radius: 24px;
-            padding: 60px 40px;
-            margin-bottom: 40px;
+            padding: 30px 60px;
+            margin-bottom: 60px;
             box-shadow: 0 20px 60px rgba(0, 0, 0, 0.4);
             border: 1px solid rgba(255, 255, 255, 0.15);
         }
 
         .logo-image-container {
             display: inline-block;
-            margin-bottom: 30px;
+            margin-bottom: -50px;
             position: relative;
+            margin-top: -40px;
+
+           
+
         }
 
         .logo-main {
-            max-width: 100%;
-            height: auto;
-            border-radius: 16px;
-            box-shadow: 0 10px 30px rgba(0, 0, 0, 0.5);
+            max-width: 300px;
+            height: 300px;
+            position: relative;
+            margin-bottom: -70px;
+            
+            
         }
 
         .brand-title {
@@ -108,7 +114,7 @@
             color: #FFD166;
             font-size: 24px;
             font-weight: 600;
-            margin-bottom: -10px;
+            margin-bottom: 10px;
             letter-spacing: 2px;
         }
 
@@ -118,6 +124,7 @@
             gap: 20px;
             justify-content: center;
             flex-wrap: wrap;
+            margin-bottom: -30px;
         }
 
         .button-link {
@@ -227,7 +234,7 @@
             }
 
             .logo-card {
-                padding: 40px 20px;
+                padding: 20px 20px;
             }
 
             .brand-title {
@@ -254,9 +261,8 @@
     <!-- Header -->
     <header>
         <div class="logo-container">
-            <img src="{{ asset('build/image/aynlytics.svg') }}" alt="Logo" class="logo-icon">
+            <img src="{{ asset('build/image/3.svg') }}" alt="Logo" class="logo-icon">
             <h1 class="brand-name">AYNLYTICS</h1>
-            <p>SFinancial Planner</p>
         </div>
     </header>
 
@@ -267,7 +273,7 @@
             <!-- Logo Container -->
             <div class="logo-card">
                 <div class="logo-image-container">
-                    <img src="{{ asset('build/image/aynlytics.svg') }}" alt="AYNLYTICS Financial Planner" class="logo-main">
+                    <img src="{{ asset('build/image/2.svg') }}" alt="AYNLYTICS Financial Planner" class="logo-main">
                 </div>
                 
                 <!-- Brand Title -->

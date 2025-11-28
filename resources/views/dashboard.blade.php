@@ -316,7 +316,7 @@
         <div class="header-container">
             <div class="header-content">
                 <div class="logo-section">
-                    <div class="logo-icon"><img src="{{ asset('build/image/2.svg') }}" alt=""></div>
+                    <div class="logo-icon"><img src="{{ asset('build/image/2.png') }}" alt=""></div>
                     <div class="logo-text">
                         <h1>AYNLYTICS</h1>
                         <p>Financial Planner</p>

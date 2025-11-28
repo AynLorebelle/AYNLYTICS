@@ -7,7 +7,7 @@
     <style>
         body {
             font-family: Arial, sans-serif;
-            background-color:  #0c1757ff;
+            background-color:  #EFECE3;
             display: flex;
             justify-content: center;
             align-items: center;
@@ -85,7 +85,7 @@
     <div class="register-container">
         <div class="logo-icon">
             <!-- Logo Path provided by user -->
-            <img src="{{ asset('build/image/aynlytics.svg') }}" alt="Logo">
+            <img src="{{ asset('build/image/2.svg') }}" alt="Logo">
         </div>
 
         <h2>Create an Account</h2>
