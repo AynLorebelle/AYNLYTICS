@@ -7,7 +7,7 @@
     <style>
         body {
             font-family: Arial, sans-serif;
-            background-color: #0c1757ff;
+            background: linear-gradient(135deg, #0a1e36 0%, #1a3a5c 50%, #2B5F8C 100%);
             display: flex;
             justify-content: center;
             align-items: center;
@@ -15,7 +15,8 @@
             margin: 0;
         }
         .login-container {
-            background-color: #0c1757ff;
+            background: rgba(255, 255, 255, 0.08);
+            backdrop-filter: blur(10px);
             padding: 40px;
             border-radius: 8px;
             box-shadow: 0 4px 12px rgba(0, 0, 0, 0.1);
