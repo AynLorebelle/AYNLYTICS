@@ -17,14 +17,13 @@ class BudgetController extends Controller
     public function index(Request $request)
     {
         $user = $request->user();
-        $budgets = Budget::where('user_id', $user->id)->orderBy('year', 'desc')->orderBy('month', 'desc')->get();
+        $budgets = Budget::with('category')->where('user_id', $user->id)->orderBy('year', 'desc')->orderBy('month', 'desc')->paginate(50);
         return view('budgets.index', compact('budgets'));
     }
 
     public function create()
     {
-        $user = auth()->user();
-        $categories = Category::where(function($q) use ($user){ $q->where('is_system',true)->orWhere('user_id',$user->id); })->get();
+        $categories = $this->categoriesForUser();
         $budget = new Budget();
         return view('budgets.create', compact('categories','budget'));
     }
@@ -32,8 +31,7 @@ class BudgetController extends Controller
     public function edit(Budget $budget)
     {
         $this->authorize('update', $budget);
-        $user = auth()->user();
-        $categories = Category::where(function($q) use ($user){ $q->where('is_system',true)->orWhere('user_id',$user->id); })->get();
+        $categories = $this->categoriesForUser();
         return view('budgets.edit', compact('budget','categories'));
     }
 
@@ -41,30 +39,46 @@ class BudgetController extends Controller
     {
         $data = $request->validated();
         $data['user_id'] = $request->user()->id;
-        Budget::updateOrCreate(
-            [
-                'user_id' => $data['user_id'],
-                'category_id' => $data['category_id'],
-                'month' => $data['month'],
-                'year' => $data['year'],
-            ],
-            ['amount' => $data['amount']]
-        );
 
-        return redirect()->route('budgets.index')->with('success', 'Budget saved');
+        try {
+            Budget::updateOrCreate(
+                [
+                    'user_id' => $data['user_id'],
+                    'category_id' => $data['category_id'],
+                    'month' => $data['month'],
+                    'year' => $data['year'],
+                ],
+                ['amount' => $data['amount']]
+            );
+
+            return redirect()->route('budgets.index')->with('success', 'Budget saved');
+        } catch (\Throwable $e) {
+            report($e);
+            return back()->withInput()->with('error', 'Unable to save budget.');
+        }
     }
 
     public function update(BudgetRequest $request, Budget $budget)
     {
         $this->authorize('update', $budget);
-        $budget->update($request->validated());
-        return redirect()->route('budgets.index')->with('success', 'Budget updated');
+        try {
+            $budget->update($request->validated());
+            return redirect()->route('budgets.index')->with('success', 'Budget updated');
+        } catch (\Throwable $e) {
+            report($e);
+            return back()->withInput()->with('error', 'Unable to update budget.');
+        }
     }
 
     public function destroy(Budget $budget)
     {
         $this->authorize('delete', $budget);
-        $budget->delete();
-        return back()->with('success', 'Budget deleted');
+        try {
+            $budget->delete();
+            return back()->with('success', 'Budget deleted');
+        } catch (\Throwable $e) {
+            report($e);
+            return back()->with('error', 'Unable to delete budget.');
+        }
     }
 }

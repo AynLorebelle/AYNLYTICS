@@ -10,7 +10,7 @@
 
   <div class="card">
     <div class="card-body">
-      <table class="table table-striped">
+      <table class="table table-striped table-dark">
         <thead><tr><th>Name</th><th>Type</th><th>System</th><th></th></tr></thead>
         <tbody>
           @foreach($categories as $c)
@@ -26,6 +26,7 @@
           @endforeach
         </tbody>
       </table>
+      {{ $categories->links() }}
     </div>
   </div>
 @endsection

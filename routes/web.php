@@ -40,6 +40,7 @@ Route::middleware('auth')->group(function () {
 
     // Dashboard
     Route::get('app/dashboard', [DashboardController::class, 'index'])->name('app.dashboard');
+    Route::get('app/dashboard/charts', [DashboardController::class, 'charts'])->name('app.dashboard.charts');
 
     // Resources
     Route::resource('expenses', ExpenseController::class);
@@ -51,7 +52,7 @@ Route::middleware('auth')->group(function () {
     Route::get('reports', [ReportController::class, 'index'])->name('reports.index');
 
     // Admin area (controller enforces admin)
-    Route::prefix('admin')->name('admin.')->group(function () {
+    Route::prefix('admin')->name('admin.')->middleware('can:admin')->group(function () {
         Route::get('users', [AdminController::class, 'index'])->name('users.index');
         Route::get('users/{user}/edit', [AdminController::class, 'edit'])->name('users.edit');
         Route::patch('users/{user}', [AdminController::class, 'update'])->name('users.update');

@@ -76,6 +76,17 @@
           border-bottom: 1px solid #1b263b !important;
       }
 
+      /* Ensure Bootstrap dark tables match the app's dark blue background
+         - Make row backgrounds transparent so they inherit the card/body color
+         - Keep a very subtle stripe if desired (disabled here so rows match exactly)
+      */
+      table.table.table-dark tbody tr,
+      table.table.table-striped.table-dark tbody tr,
+      table.table-dark tbody tr:nth-child(odd),
+      table.table-striped.table-dark tbody tr:nth-child(odd) {
+          background-color: transparent !important;
+      }
+
       /* ======== BUTTONS ======== */
       .btn-primary {
           background: #3a86ff !important;
@@ -510,6 +521,24 @@
     }
 </script>
 @stack('scripts')
+<script>
+    // Prevent double-submits: disable the submit button and change text when a form is submitted
+    document.addEventListener('submit', function (e) {
+        try {
+            const form = e.target;
+            const submit = form.querySelector('button[type=submit], input[type=submit]');
+            if (submit) {
+                submit.disabled = true;
+                if (submit.tagName.toLowerCase() === 'button') {
+                    submit.dataset.__orig = submit.innerHTML;
+                    submit.innerHTML = 'Processing...';
+                }
+            }
+        } catch (err) {
+            console.error(err);
+        }
+    });
+</script>
 </body>
 
 </html>

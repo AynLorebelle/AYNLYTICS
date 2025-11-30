@@ -36,6 +36,7 @@
               @endforeach
             </tbody>
           </table>
+          {{ $expenses->withQueryString()->links() }}
         </div>
       </div>
     </div>
@@ -56,6 +57,7 @@
               @endforeach
             </tbody>
           </table>
+          {{ $incomes->withQueryString()->links() }}
         </div>
       </div>
     </div>

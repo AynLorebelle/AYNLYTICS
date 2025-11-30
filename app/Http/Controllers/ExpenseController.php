@@ -17,14 +17,13 @@ class ExpenseController extends Controller
     public function index(Request $request)
     {
         $user = $request->user();
-        $expenses = Expense::where('user_id', $user->id)->latest()->paginate(20);
+        $expenses = Expense::with('category')->where('user_id', $user->id)->latest()->paginate(20);
         return view('expenses.index', compact('expenses'));
     }
 
     public function create()
     {
-        $user = auth()->user();
-        $categories = Category::where('type','expense')->where(function($q) use ($user){ $q->where('is_system',true)->orWhere('user_id',$user->id); })->get();
+        $categories = $this->categoriesForUser('expense');
         $expense = new Expense();
         return view('expenses.create', compact('categories','expense'));
     }
@@ -33,8 +32,14 @@ class ExpenseController extends Controller
     {
         $data = $request->validated();
         $data['user_id'] = $request->user()->id;
-        Expense::create($data);
-        return redirect()->route('expenses.index')->with('success', 'Expense created');
+
+        try {
+            Expense::create($data);
+            return redirect()->route('expenses.index')->with('success', 'Expense created');
+        } catch (\Throwable $e) {
+            report($e);
+            return back()->withInput()->with('error', 'Unable to create expense. Please try again.');
+        }
     }
 
     public function show(Expense $expense)
@@ -46,22 +51,31 @@ class ExpenseController extends Controller
     public function edit(Expense $expense)
     {
         $this->authorize('update', $expense);
-        $user = auth()->user();
-        $categories = Category::where('type','expense')->where(function($q) use ($user){ $q->where('is_system',true)->orWhere('user_id',$user->id); })->get();
+        $categories = $this->categoriesForUser('expense');
         return view('expenses.edit', compact('expense','categories'));
     }
 
     public function update(ExpenseRequest $request, Expense $expense)
     {
         $this->authorize('update', $expense);
-        $expense->update($request->validated());
-        return redirect()->route('expenses.index')->with('success', 'Expense updated');
+        try {
+            $expense->update($request->validated());
+            return redirect()->route('expenses.index')->with('success', 'Expense updated');
+        } catch (\Throwable $e) {
+            report($e);
+            return back()->withInput()->with('error', 'Unable to update expense. Please try again.');
+        }
     }
 
     public function destroy(Expense $expense)
     {
         $this->authorize('delete', $expense);
-        $expense->delete();
-        return back()->with('success', 'Expense deleted');
+        try {
+            $expense->delete();
+            return back()->with('success', 'Expense deleted');
+        } catch (\Throwable $e) {
+            report($e);
+            return back()->with('error', 'Unable to delete expense.');
+        }
     }
 }

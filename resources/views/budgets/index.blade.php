@@ -75,6 +75,7 @@
           @endforeach
         </tbody>
       </table>
+      {{ $budgets->links() }}
     @else
       <p style="color:white">No budgets yet.</p>
     @endif

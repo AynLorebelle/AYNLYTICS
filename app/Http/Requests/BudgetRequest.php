@@ -11,6 +11,13 @@ class BudgetRequest extends FormRequest
         return true;
     }
 
+    protected function prepareForValidation(): void
+    {
+        if ($this->has('amount')) {
+            $this->merge(['amount' => str_replace([',',' '], ['','.'], trim((string) $this->input('amount')))]);
+        }
+    }
+
     public function rules(): array
     {
         return [
@@ -18,6 +25,14 @@ class BudgetRequest extends FormRequest
             'amount' => ['required', 'numeric', 'min:0'],
             'month' => ['required', 'integer', 'between:1,12'],
             'year' => ['required', 'integer', 'min:1900'],
+        ];
+    }
+
+    public function messages(): array
+    {
+        return [
+            'amount.numeric' => 'Please enter a valid amount.',
+            'month.between' => 'Month must be between 1 and 12.',
         ];
     }
 }

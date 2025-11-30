@@ -11,6 +11,17 @@ class ExpenseRequest extends FormRequest
         return true;
     }
 
+    protected function prepareForValidation(): void
+    {
+        if ($this->has('amount')) {
+            // Normalize decimal separators and trim
+            $this->merge(['amount' => str_replace([',',' '], ['','.'], trim((string) $this->input('amount')))]);
+        }
+        if ($this->has('description')) {
+            $this->merge(['description' => trim($this->input('description'))]);
+        }
+    }
+
     public function rules(): array
     {
         return [
@@ -18,6 +29,15 @@ class ExpenseRequest extends FormRequest
             'amount' => ['required', 'numeric', 'min:0'],
             'description' => ['nullable', 'string'],
             'transaction_date' => ['required', 'date'],
+        ];
+    }
+
+    public function messages(): array
+    {
+        return [
+            'amount.numeric' => 'Please enter a valid number for amount.',
+            'amount.min' => 'Amount must be at least 0.',
+            'category_id.required' => 'Please select a category.',
         ];
     }
 }
