@@ -18,7 +18,7 @@ class CategoryController extends Controller
         $user = $request->user();
         $categories = Category::where(function ($q) use ($user) {
             $q->where('is_system', true)->orWhere('user_id', $user->id);
-        })->orderBy('type')->orderBy('name')->get();
+        })->orderBy('type')->orderBy('name')->paginate(50);
 
         return view('categories.index', compact('categories'));
     }
@@ -33,8 +33,13 @@ class CategoryController extends Controller
     {
         $data = $request->validated();
         $data['user_id'] = $request->user()->id;
-        Category::create($data);
-        return redirect()->route('categories.index')->with('success', 'Category created');
+        try {
+            Category::create($data);
+            return redirect()->route('categories.index')->with('success', 'Category created');
+        } catch (\Throwable $e) {
+            report($e);
+            return back()->withInput()->with('error', 'Unable to create category.');
+        }
     }
 
     public function edit(Category $category)
@@ -46,8 +51,13 @@ class CategoryController extends Controller
     public function update(CategoryRequest $request, Category $category)
     {
         $this->authorize('update', $category);
-        $category->update($request->validated());
-        return redirect()->route('categories.index')->with('success', 'Category updated');
+        try {
+            $category->update($request->validated());
+            return redirect()->route('categories.index')->with('success', 'Category updated');
+        } catch (\Throwable $e) {
+            report($e);
+            return back()->withInput()->with('error', 'Unable to update category.');
+        }
     }
 
     public function destroy(Category $category)
@@ -56,7 +66,13 @@ class CategoryController extends Controller
         if ($category->is_system) {
             return back()->with('error', 'Cannot delete system category');
         }
-        $category->delete();
-        return back()->with('success', 'Category deleted');
+
+        try {
+            $category->delete();
+            return back()->with('success', 'Category deleted');
+        } catch (\Throwable $e) {
+            report($e);
+            return back()->with('error', 'Unable to delete category.');
+        }
     }
 }

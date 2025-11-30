@@ -10,8 +10,12 @@
 
   <div class="card dark-card">
     <div class="card-body">
+<<<<<<< HEAD
       <div class="table-responsive">
       <table class="table table-card table-borderless align-middle mb-0">
+=======
+      <table class="table table-striped table-dark">
+>>>>>>> origin/Ventic
         <thead>
           <tr><th>Date</th><th>Category</th><th>Amount</th><th>Description</th><th></th></tr>
         </thead>

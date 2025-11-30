@@ -99,9 +99,15 @@
 </head>
 <body>
     <div class="login-container">
-        <!-- Session Status (Laravel Blade Component) -->
+        <!-- Session Status and flashes -->
         @if (session('status'))
             <div class="error-message">{{ session('status') }}</div>
+        @endif
+        @if (session('success'))
+            <div style="color: #28a745; margin-bottom: 10px;">{{ session('success') }}</div>
+        @endif
+        @if (session('error'))
+            <div class="error-message">{{ session('error') }}</div>
         @endif
 
         <div class="logo-icon">
@@ -155,6 +161,15 @@
             Don't have an account? <a href="{{ route('register') }}">Sign Up</a>
         </div>
         @endif
+        <script>
+            document.querySelector('form').addEventListener('submit', function (e) {
+                const btn = e.target.querySelector('button[type=submit]');
+                if (btn) {
+                    btn.disabled = true;
+                    btn.textContent = 'Processing...';
+                }
+            });
+        </script>
     </div>
 </body>
 </html>

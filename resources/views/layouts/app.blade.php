@@ -444,6 +444,24 @@
   });
 </script>
 @stack('scripts')
+<script>
+    // Prevent double-submits: disable the submit button and change text when a form is submitted
+    document.addEventListener('submit', function (e) {
+        try {
+            const form = e.target;
+            const submit = form.querySelector('button[type=submit], input[type=submit]');
+            if (submit) {
+                submit.disabled = true;
+                if (submit.tagName.toLowerCase() === 'button') {
+                    submit.dataset.__orig = submit.innerHTML;
+                    submit.innerHTML = 'Processing...';
+                }
+            }
+        } catch (err) {
+            console.error(err);
+        }
+    });
+</script>
 </body>
 
 </html>

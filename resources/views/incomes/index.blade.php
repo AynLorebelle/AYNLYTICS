@@ -10,8 +10,7 @@
 
   <div class="card dark-card incomes-card ">
     <div class="card-body">
-      <div class="table-responsive">
-      <table class="table table-card table-borderless align-middle mb-0">
+      <table class="table table-striped table-dark">
         <thead>
           <tr><th>Date</th><th>Category</th><th>Amount</th><th>Description</th><th></th></tr>
         </thead>

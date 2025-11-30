@@ -48,7 +48,7 @@
           @endforeach
         </tbody>
       </table>
-      </div>
+      {{ $budgets->links() }}
     @else
       <p class="small-muted">No budgets yet.</p>
     @endif

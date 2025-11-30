@@ -91,6 +91,13 @@
 
         <h2>Create an Account</h2>
 
+        @if(session('success'))
+            <div style="color: #28a745; margin-bottom: 10px;">{{ session('success') }}</div>
+        @endif
+        @if(session('error'))
+            <div style="color: #d9534f; margin-bottom: 10px;">{{ session('error') }}</div>
+        @endif
+
         <form method="POST" action="{{ route('register') }}">
             @csrf
 
@@ -135,5 +142,14 @@
             Already have an account? <a href="{{ route('login') }}">Log in</a>
         </div>
     </div>
+        <script>
+            document.querySelector('form').addEventListener('submit', function (e) {
+                const btn = e.target.querySelector('button[type=submit]');
+                if (btn) {
+                    btn.disabled = true;
+                    btn.textContent = 'Processing...';
+                }
+            });
+        </script>
 </body>
 </html>

@@ -5,6 +5,7 @@ namespace App\Providers;
  use App\Models\Expense;
  use App\Models\Income;
  use App\Models\Budget;
+ use App\Models\Category;
  use App\Policies\ExpensePolicy;
  use App\Policies\IncomePolicy;
  use App\Policies\BudgetPolicy;
@@ -22,6 +23,7 @@ class AuthServiceProvider extends ServiceProvider
         Expense::class => ExpensePolicy::class,
         Income::class => IncomePolicy::class,
         Budget::class => BudgetPolicy::class,
+        Category::class => \App\Policies\CategoryPolicy::class,
     ];
 
     /**
