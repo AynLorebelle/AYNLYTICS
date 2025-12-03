@@ -6,8 +6,8 @@
     <title>Login</title>
     <style>
         body {
-            font-family: Arial, sans-serif;
-            background: linear-gradient(135deg, #0a1e36 0%, #1a3a5c 50%, #2B5F8C 100%);
+            font-family: Inter, Arial;
+             background: linear-gradient(180deg, #001F5B 20%, #002B7A 38%, #578FCA 100%);
             display: flex;
             justify-content: center;
             align-items: center;
@@ -15,25 +15,26 @@
             margin: 0;
         }
         .login-container {
-            background: rgba(255, 255, 255, 0.08);
-            backdrop-filter: blur(10px);
+            background:  linear-gradient(190deg,rgba(65, 105, 225, 0.1) 25%, rgba(232, 244, 77, 0.3));
             padding: 40px;
-            border-radius: 8px;
-            box-shadow: 0 4px 12px rgba(0, 0, 0, 0.1);
+            border-radius: 30px;
+            border: 5px solid #ffffffff;
             width: 100%;
             max-width: 400px;
             text-align: center;
+
         }
         .logo-icon{
-            margin-bottom: -40px;
+            margin-bottom: -80px;
+            margin-top: -50px;
         }
         .logo-icon img {
               position: relative;
-                height: 200px;
+                height: 300px;
         }
         h2 {
             margin-bottom: 20px;
-            color: #FFD166;
+            color: #FFE100;
         }
         .form-group {
             margin-bottom: 20px;
@@ -42,58 +43,97 @@
         .form-group label {
             display: block;
             margin-bottom: 8px;
-            color: #FFD166;
-            font-size: 0.9rem;
+            color: #FFE100 ;
+            font-size: 1 rem;
         }
         .form-group input {
             width: 100%;
             padding: 10px;
-            border: 1px solid #ccc;
-            border-radius: 4px;
+            border: 3px solid #EFECE3;
+            border-radius: 10px;
             box-sizing: border-box;
-            font-size: 1rem;
+            font-size: 1.2 rem;
+
         }
         .form-group .error-message {
             color: #d9534f;
-            font-size: 0.8rem;
-            margin-top: 5px;
+            font-size: 0.7 rem;
+            margin-top: 10px;
+            margin-bottom: -10px;
         }
         .form-options {
             display: flex;
             justify-content: space-between;
             align-items: center;
             margin-bottom: 20px;
-            font-size: 0.9rem;
+            font-size: 1 rem;
         }
         .form-options .remember-me label {
             display: inline;
             margin-left: 5px;
+            color: #000957 ;
         }
         .form-options a {
-            color: #007bff;
+            color: #000957;
             text-decoration: none;
         }
         .login-button {
             width: 100%;
-            padding: 12px;
-            background-color: #007bff;
-            color: white;
+            padding: 16px;
+            background: linear-gradient(135deg, #4A90E2 0%, #5BA3F5 100%);
+            color: #ffffffff;
             border: none;
-            border-radius: 4px;
+            border-radius: 15px;
+            font-size: 16px;
+            font-weight: 700;
             cursor: pointer;
-            font-size: 1rem;
-            transition: background-color 0.3s;
+            transition: all 0.3s ease;
+            letter-spacing: 0.5px;
+            text-transform: uppercase;
+            box-shadow: 0 8px 20px rgba(74, 144, 226, 0.3);
         }
+
         .login-button:hover {
-            background-color: #0056b3;
+            transform: translateY(-3px);
+            box-shadow: 
+                0 15px 40px rgba(232, 244, 77, 0.6),
+                0 0 0 2px rgba(232, 244, 77, 0.4);
+            background: linear-gradient(135deg, #F4FF7A 0%, #E8F44D 100%);
+            color: #000000;
         }
+
+
         .register-link {
             margin-top: 20px;
-            font-size: 0.9rem;
+            font-size: 0.8 rem;
         }
         .register-link a {
-            color: #007bff;
+            color: #000957;
             text-decoration: none;
+        }
+        .signup-link {
+            color: #E8F44D;
+            text-decoration: none;
+            font-weight: 500;
+            font-size: 1 rem;
+            transition: all 0.3s ease;
+        }
+
+        .signup-link:hover {
+            color: #FDB813;
+            text-decoration: underline;
+        }
+        .forgot-password {
+            color: #4A90E2;
+            font-size: 16px;
+            text-decoration: none;
+            transition: all 0.3s ease;
+            font-size: 1 rem;
+        }
+
+        .forgot-password:hover {
+            color: #FDB813;
+            text-decoration: underline;
         }
     </style>
 </head>
@@ -115,7 +155,7 @@
             <img src="{{ asset('build/image/2.svg') }}" alt="Logo">
         </div>
 
-        <h2>Log In to Your Account</h2>
+        <h2>Welcome Back ! </h2>
 
         <form method="POST" action="{{ route('login') }}">
             @csrf
@@ -141,13 +181,15 @@
             <div class="form-options">
                 <div class="remember-me">
                     <input id="remember_me" type="checkbox" name="remember">
-                    <label for="remember_me" style="color: #FFD166;">Remember me</label>
+                    <label for="remember_me" style="color: #000957;">Remember me</label>
                 </div>
 
                 @if (Route::has('password.request'))
-                    <a href="{{ route('password.request') }}">
+                <div >
+                    <a class = "forgot-password "href="{{ route('password.request') }}">
                         Forgot your password?
                     </a>
+                    </div>
                 @endif
             </div>
 
@@ -157,9 +199,10 @@
         </form>
 
         @if (Route::has('register'))
-        <div class="register-link" style="color: #FFD166;">
-            Don't have an account? <a href="{{ route('register') }}">Sign Up</a>
+        <div class="register-link" style="color: #000957;">
+            Don't have an account? <a class="signup-link" href="{{ route('register') }}">Sign Up</a>
         </div>
+       
         @endif
         <script>
             document.querySelector('form').addEventListener('submit', function (e) {

@@ -13,7 +13,7 @@
 
         body {
             font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
-            background: linear-gradient(135deg, #0a1e36 0%, #1a3a5c 50%, #2B5F8C 100%);
+           background: linear-gradient(180deg, #001F5B 20%, #002B7A 38%, #578FCA 100%);
             min-height: 100vh;
             display: flex;
             flex-direction: column;
@@ -34,13 +34,17 @@
         }
 
         .logo-icon {
-            width: 100px;
-            height: 100px;
+            margin-left: -50px;
+            margin-top: -50px;
+            width: 200px;
+            height: 200px;
             border-radius: 8px;
         }
 
         .brand-name {
             color: #FFD166;
+            margin-top: -30px;
+            margin-left: -50px;
             font-size: 14px;
             font-weight: 500;
             letter-spacing: 2px;
@@ -79,7 +83,6 @@
             position: relative;
             margin-top: -40px;
 
-           
 
         }
 
@@ -99,6 +102,7 @@
             line-height: 1.2;
             margin-bottom: 20px;
             letter-spacing: 1px;
+            
         }
 
         .brand-subtitle {
@@ -111,7 +115,7 @@
 
         /* Description Styles */
         .description {
-            color: #FFD166;
+            color: #FFE100;
             font-size: 24px;
             font-weight: 600;
             margin-bottom: 10px;
@@ -143,24 +147,26 @@
         }
 
         .btn-primary {
-            background: #5A8BB8;
-            color: #FFFFFF;
-            box-shadow: 0 8px 20px rgba(90, 139, 184, 0.4);
+           background: transparent;
+            color: #ffffffff;
+            border: 2px solid #87CEEB;
         }
 
         .btn-primary:hover {
+            color: #FFE100;
+            background: rgba(135, 206, 235, 0.15);
             transform: translateY(-2px);
-            box-shadow: 0 12px 30px rgba(90, 139, 184, 0.6);
-            background: #87CEEB;
+            box-shadow: 0 8px 20px rgba(135, 206, 235, 0.3);
         }
 
         .btn-secondary {
             background: transparent;
-            color: #87CEEB;
+            color: #ffffffff;
             border: 2px solid #87CEEB;
         }
 
         .btn-secondary:hover {
+            color: #FFE100;
             background: rgba(135, 206, 235, 0.15);
             transform: translateY(-2px);
             box-shadow: 0 8px 20px rgba(135, 206, 235, 0.3);
@@ -198,7 +204,7 @@
         }
 
         .feature-title {
-            color: #87CEEB;
+            color: #ffffffff;
             margin: 0 0 10px 0;
             font-size: 20px;
             font-weight: 600;
@@ -259,12 +265,7 @@
 <body>
     
     <!-- Header -->
-    <header>
-        <div class="logo-container">
-            <img src="{{ asset('build/image/3.svg') }}" alt="Logo" class="logo-icon">
-            <h1 class="brand-name">AYNLYTICS</h1>
-        </div>
-    </header>
+   
 
     <!-- Main Content -->
     <main>
@@ -281,8 +282,10 @@
                 <p class="description">
                 SMART. SIMPLE. SECURE
                 </p>
+                
             </div>
 
+        
             <!-- Description -->
            
 
