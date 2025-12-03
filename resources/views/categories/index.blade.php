@@ -11,8 +11,8 @@
   <div class="card dark-card">
     <div class="card-body">
       <table class="table table-striped table-dark">
-      <div class="table-responsive">
-      <table class="table table-card table-borderless align-middle mb-0">
+        <div class="table-responsive">
+       <table class="table table-card table-borderless align-middle mb-0">
         <thead><tr><th>Name</th><th>Type</th><th>System</th><th></th></tr></thead>
         <tbody>
           @foreach($categories as $c)

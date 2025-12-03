@@ -19,13 +19,13 @@ body{background-color:var(--ayn-navy);color:var(--ayn-white);min-height:100vh}
 main.container{padding-top:1.25rem;padding-bottom:2.5rem}
 
 /* Cards */
-.card{background:#0c222b;border-radius:.75rem;border:1px solid rgba(255,255,255,0.03);box-shadow:0 6px 18px rgba(0,0,0,0.3);margin-left: 450px;}
-.card .card-body{color:rgba(255,255,255,0.95)}
+.card{background:#0c222b;border-radius:.75rem;border:1px solid rgba(255, 255, 255, 0.03);box-shadow:7px 8px 200px rgba(255, 255, 255, 0.3);border-color: #ffffff;margin-left: 450px;margin-top: 50px;}
+.card .card-body{border-radius:.75rem;border:1px;border-color: #ffffff;}
 .card h5{font-weight:700;color:var(--ayn-gold)}
 
 /* dark-card variant for forms*/
 .dark-card{background:linear-gradient(180deg,#0d2130,#0b1b26);color:var(--ayn-white);border:1px solid rgba(255,255,255,0.03)}
-.dark-card .card-body{color:rgba(255,255,255,.95)}
+.dark-card .card-body{color:rgba(255, 255, 255, 0.95)}
 .dark-card h5{color:var(--ayn-gold)}
 .dark-card .small{color:rgba(255,255,255,.7)}
 .dark-card .form-label{color:rgba(255,255,255,.9)}
@@ -38,6 +38,11 @@ main.container{padding-top:1.25rem;padding-bottom:2.5rem}
 .table-card thead th{background:rgba(255,255,255,0.03);border-bottom:0;color:rgba(255,255,255,.9)}
 .table-card tbody td{background:transparent;color:rgba(255,255,255,.95);border-top:1px solid rgba(255,255,255,0.03)}
 .table-card tbody tr:hover td{background:rgba(255,255,255,0.01)}
+
+.categories-card{
+  padding-bottom: 50px;
+
+}
 
 /* Pagination theme */
 .pagination .page-link{background:transparent;border:1px solid rgba(255,255,255,0.03);color:rgba(255,255,255,.9)}
@@ -57,7 +62,16 @@ main.container{padding-top:1.25rem;padding-bottom:2.5rem}
 .progress .progress-bar{transition: width .6s ease}
 
 /* Button tweaks */
-.ayn-cta{background:var(--ayn-gold);color:var(--ayn-navy);border-radius:6px;padding:.5rem 0.8rem;border:0}
+.ayn-cta{background: transparent;
+            color: #ffffffff;
+            border: 2px solid #87CEEB;
+            margin-bottom: -30px;}
+.ayn-cta:hover{ color: #FFE100;
+            background: rgba(135, 206, 235, 0.15);
+            transform: translateY(-2px);
+            box-shadow: 0 8px 20px rgba(135, 206, 235, 0.3);}
+
+
 .btn-outline-primary{border-color:var(--ayn-blue);color:var(--ayn-blue)}
 .btn-outline-primary:hover{background:var(--ayn-blue);color:#fff}
 .btn-outline-danger{border-color:#ff4d6d;color:#ff4d6d}
