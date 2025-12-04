@@ -9,7 +9,7 @@
     @vite(['resources/css/app.css', 'resources/js/app.js'])
 
     @stack('styles')
-     <style>
+      <style>
         * {
             margin: 0;
             padding: 0;
@@ -25,47 +25,96 @@
         
         .header {
             border-bottom: 1px solid #1f2937;
-            background-color: rgba(10, 22, 40, 0.95);
+            background-color: #0a1e36;
             position: sticky;
             top: 0;
             z-index: 50;
+            padding: 10px 0;
         }
         
         .header-container {
-            max-width: 1280px;
-            margin: 0 auto;
-            padding: 0 24px;
+            max-width: 110%;  
+            margin: 0;        
+            padding: 10px 20px;  
         }
-        
+                
         .header-content {
             display: flex;
             align-items: center;
             justify-content: space-between;
             height: 64px;
+             width: 100%;
         }
+          /* Header actions container */
+        .header-actions {
+            display: flex;
+            align-items: center;
+            margin-left: auto;
+            padding-right: 20px;  
+            
+        }
+
+        /* Individual icon buttons */
+        .header-icon {
+            position: relative;
+            padding: 8px;
+            color: #ffffffff;
+            background: transparent;
+            border: none;
+            cursor: pointer;
+            border-radius: 8px;
+            transition: all 0.2s;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            margin-right: 50px;
+            
+            
+        }
+
+        .header-icon:hover {
+            box-shadow: 
+                0 15px 40px rgba(232, 244, 77, 0.6),
+                0 0 0 2px rgba(232, 244, 77, 0.4);
+            background: transparent;
+        }
+
+
+        .header-icon .icon {
+            width: 24px;
+            height: 24px;
+        }
+
         
         .logo-section {
             display: flex;
             align-items: center;
             gap: 12px;
+            padding: 100px;
+            margin-left: 0px;
+            margin-top: 0px;
+            padding: 0px;
         }
         
         .logo-icon {
-            width: 40px;
-            height: 40px;
-            background: linear-gradient(135deg, #60a5fa, #3b82f6);
+            width: 130px;
+            height: 130px;
+            background: transparent;
             border-radius: 8px;
             display: flex;
             align-items: center;
             justify-content: center;
             font-size: 20px;
             font-weight: bold;
+            margin-top: 20px;
+            margin-left: 40px;
         }
         .logo-icon img {
-    width: 100%;
-    height: auto;
-    object-fit: contain;
-}
+            width: 100%;
+            height: auto;
+            object-fit: contain;
+
+        }
         
         .logo-text h1 {
             font-size: 20px;
@@ -79,27 +128,43 @@
             color: #9ca3af;
         }
         
-        .nav-button {
-            padding: 8px;
+
+        /* Notification badge */
+        .notification-badge {
+            position: absolute;
+            top: 4px;
+            right: 4px;
+            background-color: #ef4444;
             color: white;
-            background: transparent;
-            border: none;
-            cursor: pointer;
-            
+            font-size: 10px;
+            font-weight: bold;
+            padding: 2px 5px;
+            border-radius: 10px;
+            min-width: 16px;
+            text-align: center;
         }
         
         .menu-open {
-        border-top: 1px solid #1f2937;
-    background-color: #0a1628;
-    padding: 16px 24px;
-    display: flex;
-    flex-direction: column;
-    align-items: flex-center;  
+            position: fixed;           
+            right: 20px;                  
+            top: 115px;                    
+            height: calc(100vh- 84px);             
+            width: 250px;              
+            border-right: 1px solid #1f2937;  
+            background-color: #0a1628;
+            padding: 16px 12px;       
+            display: flex;
+            flex-direction: column;
+            align-items: stretch;      
+            overflow-y: auto;          
+            z-index: 100;   
         }
         
         .menu-nav {
             display: flex;
             flex-direction: column;
+            align-items: flex-start;
+            margin-top: 0;
             gap: 8px;
         }
         
@@ -117,8 +182,7 @@
             width: 100%;
             text-align: left;
             transition: all 0.2s;
-             width: auto;       /* <-- REMOVE full width */
-    text-align: left;  /* can stay */
+            text-align: left;  
         }
         
         .menu-item:hover {
@@ -317,23 +381,49 @@
   </head>
   <body>
     
-       <!-- Header -->
+      <!-- Header -->
     <header class="header">
         <div class="header-container">
             <div class="header-content">
                 <div class="logo-section">
-                    <div class="logo-icon"><img src="{{ asset('build/image/2.png') }}" alt=""></div>
+                    <div class="logo-icon"><img src="{{ asset('build/image/2.svg') }}" alt=""></div>
                     <div class="logo-text">
-                        <h1>AYNLYTICS</h1>
-                        <p>Financial Planner</p>
+                        <h1> </h1>
+                        <p></p>
                     </div>
+            
                 </div>
-                
-                <button class="nav-button" onclick="toggleMenu()">
-                    <svg class="icon" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M4 6h16M4 12h16M4 18h16"></path>
-                    </svg>
-                </button>
+
+                <div class="header-actions">
+                     <a href="{{ route('profile.edit') }}" class="menu-item {{ request()->routeIs('profile.edit') ? 'active' : '' }}">
+                <button class="header-icon" onclick="toggleProfile()">
+            <svg class="icon" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" 
+                      d="M16 7a4 4 0 11-8 0 4 4 0 018 0zM12 14a7 7 0 00-7 7h14a7 7 0 00-7-7z">
+                </path>
+            </svg>
+          
+        </button>
+    </a>
+
+                <button class="header-icon " onclick="toggleNotifications()">
+            <svg class="icon" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" 
+                      d="M15 17h5l-1.405-1.405A2.032 2.032 0 0118 14.158V11a6.002 6.002 0 00-4-5.659V5a2 2 0 10-4 0v.341C7.67 6.165 6 8.388 6 11v3.159c0 .538-.214 1.055-.595 1.436L4 17h5m6 0v1a3 3 0 11-6 0v-1m6 0H9">
+                </path>
+            </svg>
+            <!-- Optional: Notification badge -->
+            <span class="notification-badge">3</span>
+        </button>
+
+                <button class="header-icon menu " onclick="toggleMenu()">
+            <svg class="icon" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" 
+                      d="M4 6h16M4 12h16M4 18h16">
+                </path>
+            </svg>
+        </button>
+    </div>
             </div>
         </div>
 
@@ -347,20 +437,12 @@
     </svg>
     <span>Dashboard</span>
 </a>
-                <!-- Set Goals -->
-    <a class="nav-link menu-item" 
-       href="" 
-       onclick="setActive(1)">
-        <svg class="icon" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 12l2 2 4-4m6 2a9 9 0 11-18 0 9 9 0 0118 0z"></path>
-        </svg>
-        <span>Set Goals</span>
-    </a>
+               
 
     <!-- Analytics -->
     <a class="nav-link menu-item" 
-         href="{{ route('analytics.index') }}"
-       onclick="setActive(2)">
+       href="{{ route('analytics.index') }}" 
+       onclick="setActive(1)">
         <svg class="icon" fill="none" stroke="currentColor" viewBox="0 0 24 24">
             <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M13 7h8m0 0v8m0-8l-8 8-4-4-6 6"></path>
         </svg>
@@ -370,7 +452,7 @@
     <!-- Budget -->
     <a class="nav-link menu-item" 
        href="{{ route('budgets.index') }}" 
-       onclick="setActive(3)">
+       onclick="setActive(2)">
         <svg class="icon" fill="none" stroke="currentColor" viewBox="0 0 24 24">
             <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 8c-1.657 0-3 .895-3 2s1.343 2 3 2 3 .895 3 2-1.343 2-3 2m0-8c1.11 0 2.08.402 2.599 1M12 8V7m0 1v8m0 0v1m0-1c-1.11 0-2.08-.402-2.599-1M21 12a9 9 0 11-18 0 9 9 0 0118 0z"></path>
         </svg>
@@ -380,7 +462,7 @@
     <!-- Expenses -->
     <a class="nav-link menu-item" 
        href="{{ route('expenses.index') }}" 
-       onclick="setActive(4)">
+       onclick="setActive(3)">
         <svg class="icon" fill="none" stroke="currentColor" viewBox="0 0 24 24">
              <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M3 7l6 6 4-4 8 8"/>
         </svg>
@@ -390,7 +472,7 @@
     <!-- Categories -->
     <a class="nav-link menu-item" 
        href="{{ route('categories.index') }}" 
-       onclick="setActive(5)">
+       onclick="setActive(4)">
         <svg class="icon" fill="none" stroke="currentColor" viewBox="0 0 24 24">
             <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M7 7h.01M3 11l8.586 8.586a2 2 0 002.828 0L21 13l-8-8H5a2 2 0 00-2 2v4z"/>
         </svg>
@@ -400,18 +482,13 @@
     <!-- Income -->
     <a class="nav-link menu-item" 
        href="{{ route('incomes.index') }}" 
-       onclick="setActive(6)">
+       onclick="setActive(5)">
         <svg class="icon" fill="none" stroke="currentColor" viewBox="0 0 24 24">
             <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 12l2 2 4-4m6 2a9 9 0 11-18 0 9 9 0 0118 0z"/>
         </svg>
         <span>Income</span>
     </a>
-    <a href="{{ route('profile.edit') }}" class="menu-item {{ request()->routeIs('profile.edit') ? 'active' : '' }}">
-    <svg class="icon" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M5.121 17.804A13.937 13.937 0 0112 16c2.5 0 4.847.655 6.879 1.804M15 10a3 3 0 11-6 0 3 3 0 016 0z"></path>
-    </svg>
-    <span>Edit Profile</span>
-</a>
+    
             </nav>
         </div>
     </header>

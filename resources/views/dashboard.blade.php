@@ -389,13 +389,16 @@
                 </div>
 
                 <div class="header-actions">
-                 <button class="header-icon" onclick="toggleProfile()">
+                  <a href="{{ route('profile.edit') }}" class="menu-item {{ request()->routeIs('profile.edit') ? 'active' : '' }}">
+                <button class="header-icon" onclick="toggleProfile()">
             <svg class="icon" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                 <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" 
                       d="M16 7a4 4 0 11-8 0 4 4 0 018 0zM12 14a7 7 0 00-7 7h14a7 7 0 00-7-7z">
                 </path>
             </svg>
+          
         </button>
+    </a>
 
                 <button class="header-icon " onclick="toggleNotifications()">
             <svg class="icon" fill="none" stroke="currentColor" viewBox="0 0 24 24">
@@ -428,20 +431,11 @@
     </svg>
     <span>Dashboard</span>
 </a>
-                <!-- Set Goals -->
-    <a class="nav-link menu-item" 
-       href="" 
-       onclick="setActive(1)">
-        <svg class="icon" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 12l2 2 4-4m6 2a9 9 0 11-18 0 9 9 0 0118 0z"></path>
-        </svg>
-        <span>Set Goals</span>
-    </a>
 
     <!-- Analytics -->
     <a class="nav-link menu-item" 
        href="{{ route('analytics.index') }}" 
-       onclick="setActive(2)">
+       onclick="setActive(1)">
         <svg class="icon" fill="none" stroke="currentColor" viewBox="0 0 24 24">
             <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M13 7h8m0 0v8m0-8l-8 8-4-4-6 6"></path>
         </svg>
@@ -451,7 +445,7 @@
     <!-- Budget -->
     <a class="nav-link menu-item" 
        href="{{ route('budgets.index') }}" 
-       onclick="setActive(3)">
+       onclick="setActive(2)">
         <svg class="icon" fill="none" stroke="currentColor" viewBox="0 0 24 24">
             <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 8c-1.657 0-3 .895-3 2s1.343 2 3 2 3 .895 3 2-1.343 2-3 2m0-8c1.11 0 2.08.402 2.599 1M12 8V7m0 1v8m0 0v1m0-1c-1.11 0-2.08-.402-2.599-1M21 12a9 9 0 11-18 0 9 9 0 0118 0z"></path>
         </svg>
@@ -461,7 +455,7 @@
     <!-- Expenses -->
     <a class="nav-link menu-item" 
        href="{{ route('expenses.index') }}" 
-       onclick="setActive(4)">
+       onclick="setActive(3)">
         <svg class="icon" fill="none" stroke="currentColor" viewBox="0 0 24 24">
              <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M3 7l6 6 4-4 8 8"/>
         </svg>
@@ -471,7 +465,7 @@
     <!-- Categories -->
     <a class="nav-link menu-item" 
        href="{{ route('categories.index') }}" 
-       onclick="setActive(5)">
+       onclick="setActive(4)">
         <svg class="icon" fill="none" stroke="currentColor" viewBox="0 0 24 24">
             <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M7 7h.01M3 11l8.586 8.586a2 2 0 002.828 0L21 13l-8-8H5a2 2 0 00-2 2v4z"/>
         </svg>
@@ -481,18 +475,13 @@
     <!-- Income -->
     <a class="nav-link menu-item" 
        href="{{ route('incomes.index') }}" 
-       onclick="setActive(6)">
+       onclick="setActive(5)">
         <svg class="icon" fill="none" stroke="currentColor" viewBox="0 0 24 24">
             <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 12l2 2 4-4m6 2a9 9 0 11-18 0 9 9 0 0118 0z"/>
         </svg>
         <span>Income</span>
     </a>
-    <a href="{{ route('profile.edit') }}" class="menu-item {{ request()->routeIs('profile.edit') ? 'active' : '' }}">
-    <svg class="icon" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M5.121 17.804A13.937 13.937 0 0112 16c2.5 0 4.847.655 6.879 1.804M15 10a3 3 0 11-6 0 3 3 0 016 0z"></path>
-    </svg>
-    <span>Edit Profile</span>
-</a>
+    
             </nav>
         </div>
     </header>
@@ -678,7 +667,7 @@
         }
 
 
-        window.addEventListener('DOMContentLoaded', loadDashboardCharts);
+        
     </script>
 
 </body>

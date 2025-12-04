@@ -18,13 +18,50 @@ body{background-color:var(--ayn-navy);color:var(--ayn-white);min-height:100vh}
 .ayn-navbar .nav-link.active{color:var(--ayn-gold);font-weight:700}
 main.container{padding-top:1.25rem;padding-bottom:2.5rem}
 
+/* Center content wrapper */
+section.col-md-9 {
+  max-width: 100% !important;
+  display: flex !important;
+  justify-content: center !important;
+  margin: 0 auto !important;
+}
+
+.main-content {
+  max-width: 1400px;
+  margin: 0 auto;
+  padding: 2rem 1.5rem;
+  width: 100%;
+}
+
 /* Cards */
-.card{background:#0c222b;border-radius:.75rem;border:1px solid rgba(255, 255, 255, 0.03);box-shadow:7px 8px 200px rgba(255, 255, 255, 0.3);border-color: #ffffff;margin-left: 450px;margin-top: 50px;}
-.card .card-body{border-radius:.75rem;border:1px;border-color: #ffffff;}
+.card{
+  background:#0c222b;
+  border-radius:.75rem;
+  border:1px solid rgba(255, 255, 255, 0.03);
+  box-shadow:7px 8px 200px rgba(255, 255, 255, 0.3);
+  border-color: #ffffff;
+  margin: 50px auto 0 auto; /* Centered with top margin */
+  max-width: 1400px; /* Limit max width */
+  width: 100%; /* Full width up to max */
+}
+
+.card .card-body{
+  border-radius:.75rem;
+  border:1px;
+  border-color: #ffffff;
+}
+
 .card h5{font-weight:700;color:var(--ayn-gold)}
 
 /* dark-card variant for forms*/
-.dark-card{background:linear-gradient(180deg,#0d2130,#0b1b26);color:var(--ayn-white);border:1px solid rgba(255,255,255,0.03)}
+.dark-card{
+  background:linear-gradient(180deg,#0d2130,#0b1b26);
+  color:var(--ayn-white);
+  border:1px solid rgba(255,255,255,0.03);
+  margin: 0 auto; /* Center dark cards too */
+  max-width: 1400px;
+}
+
 .dark-card .card-body{color:rgba(255, 255, 255, 0.95)}
 .dark-card h5{color:var(--ayn-gold)}
 .dark-card .small{color:rgba(255,255,255,.7)}
@@ -32,16 +69,31 @@ main.container{padding-top:1.25rem;padding-bottom:2.5rem}
 .dark-card .form-control{background:rgba(255,255,255,0.04);border:1px solid rgba(255,255,255,0.05);color:var(--ayn-white)}
 .dark-card .form-select{background:rgba(255,255,255,0.04);border:1px solid rgba(255,255,255,0.05);color:var(--ayn-white)}
 
-.incomes-card{margin-left: 450px}
+.incomes-card{
+  margin: 0 auto;
+  max-width: 1400px;
+}
 
 /* Tables in dark cards */
-.table-card thead th{background:rgba(255,255,255,0.03);border-bottom:0;color:rgba(255,255,255,.9)}
-.table-card tbody td{background:transparent;color:rgba(255,255,255,.95);border-top:1px solid rgba(255,255,255,0.03)}
+.table-card thead th{
+  background:rgba(255,255,255,0.03);
+  border-bottom:0;
+  color:rgba(255,255,255,.9);
+  padding: 1rem;
+  font-weight: 600;
+}
+
+.table-card tbody td{
+  background:transparent;
+  color:rgba(255,255,255,.95);
+  border-top:1px solid rgba(255,255,255,0.03);
+  padding: 1rem;
+}
+
 .table-card tbody tr:hover td{background:rgba(255,255,255,0.01)}
 
 .categories-card{
   padding-bottom: 50px;
-
 }
 
 /* Pagination theme */
@@ -49,37 +101,85 @@ main.container{padding-top:1.25rem;padding-bottom:2.5rem}
 .pagination .page-item.active .page-link{background:var(--ayn-blue);border-color:var(--ayn-blue);color:#fff}
 
 /* Center table within the content column and limit max width */
-.table-card{margin:0 auto;width:min(1100px,100%)}
+.table-card{margin:0 auto;width:100%;max-width:1400px}
 .table-card td,.table-card th{white-space:nowrap}
 
 /* Action buttons & icons */
-.action-btns .btn{margin-left:6px}
+.action-btns {
+  display: inline-flex;
+  gap: 0.5rem;
+}
+
+.action-btns .btn{margin-left:0}
 .action-btns .btn i{vertical-align:middle}
 
 /* Small badges & progress */
 .small-muted{color:rgba(255,255,255,.65)}
-.progress{background:rgba(255,255,255,0.04)}
+.progress{
+  background:rgba(255,255,255,0.04);
+  height: 8px;
+  border-radius: 4px;
+}
+
 .progress .progress-bar{transition: width .6s ease}
 
 /* Button tweaks */
-.ayn-cta{background: transparent;
-            color: #ffffffff;
-            border: 2px solid #87CEEB;
-            margin-bottom: -30px;}
-.ayn-cta:hover{ color: #FFE100;
-            background: rgba(135, 206, 235, 0.15);
-            transform: translateY(-2px);
-            box-shadow: 0 8px 20px rgba(135, 206, 235, 0.3);}
+.ayn-cta{
+  background: transparent;
+  color: #ffffffff;
+  border: 2px solid #87CEEB;
+  margin-bottom: 0;
+}
 
+.ayn-cta:hover{ 
+  color: #FFE100;
+  background: rgba(135, 206, 235, 0.15);
+  transform: translateY(-2px);
+  box-shadow: 0 8px 20px rgba(135, 206, 235, 0.3);
+}
 
-.btn-outline-primary{border-color:var(--ayn-blue);color:var(--ayn-blue)}
-.btn-outline-primary:hover{background:var(--ayn-blue);color:#fff}
-.btn-outline-danger{border-color:#ff4d6d;color:#ff4d6d}
-.btn-outline-danger:hover{background:#ff4d6d;color:#fff}
+.btn-outline-primary{
+  border-color:var(--ayn-blue);
+  color:var(--ayn-blue);
+  transition: all 0.2s;
+}
+
+.btn-outline-primary:hover{
+  background:var(--ayn-blue);
+  color:#fff;
+}
+
+.btn-outline-danger{
+  border-color:#ff4d6d;
+  color:#ff4d6d;
+  transition: all 0.2s;
+}
+
+.btn-outline-danger:hover{
+  background:#ff4d6d;
+  color:#fff;
+}
+
+/* Header section styling */
+.d-flex.justify-content-between.mb-3,
+.d-flex.justify-content-between.mb-4 {
+  max-width: 1400px;
+  margin-left: auto;
+  margin-right: auto;
+  padding: 0 1.5rem;
+}
 
 /* Responsive tweaks */
 @media (max-width: 768px){
   .sidebar{display:none}
+  .card, .dark-card, .incomes-card {
+    margin-left: 1rem;
+    margin-right: 1rem;
+  }
+  .d-flex.justify-content-between.mb-3,
+  .d-flex.justify-content-between.mb-4 {
+    padding: 0 1rem;
+  }
 }
 
 /* Offcanvas sidebar styling */
