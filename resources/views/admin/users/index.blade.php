@@ -5,7 +5,7 @@
 @section('content')
   <h3>Users</h3>
   <div class="card">
-    <div class="card-body">
+    <div class="card-body dark-card">
       <table class="table">
         <thead><tr><th>Name</th><th>Email</th><th>Role</th><th></th></tr></thead>
         <tbody>
