@@ -3,30 +3,68 @@
 namespace App\Http\Controllers;
 
 use Illuminate\Http\Request;
+use Illuminate\Support\Facades\DB;
 
 class AnalyticsController extends Controller
 {
-
      public function index(Request $request)
      {
             $user = $request->user();
             $month = $request->input('month', now()->month);
             $year = $request->input('year', now()->year);
             
+            // Calculate totals for summary cards
+            $totalIncome = (float) DB::table('incomes')
+                ->where('user_id', $user->id)
+                ->whereMonth('transaction_date', $month)
+                ->whereYear('transaction_date', $year)
+                ->sum('amount');
+
+            $totalExpenses = (float) DB::table('expenses')
+                ->where('user_id', $user->id)
+                ->whereMonth('transaction_date', $month)
+                ->whereYear('transaction_date', $year)
+                ->sum('amount');
+
+            $totalBudget = (float) DB::table('budgets')
+                ->where('user_id', $user->id)
+                ->where('month', $month)
+                ->where('year', $year)
+                ->sum('amount');
+
+            // Calculate budget usage percentage
+            $budgetUsagePercent = $totalBudget > 0 ? round(($totalExpenses / $totalBudget) * 100, 1) : 0;
+
+            // Calculate savings rate
+            $savingsRate = $totalIncome > 0 ? round((($totalIncome - $totalExpenses) / $totalIncome) * 100, 1) : 0;
+            
             $expensesByCategory = $this->getExpensesByCategory($user->id, $month, $year);
-            $trend = $this->getMonthlyTrend($user->id, $year);
+            $trend = $this->getMonthlyTrend($user->id, 6);
             $budgetPerf = $this->getBudgetPerformance($user->id, $month, $year);
             $daily = $this->getDailyExpenses($user->id, $month, $year);
-            return view('analytics.index', compact('expensesByCategory', 'trend', 'budgetPerf', 'daily', 'month', 'year'));
+            
+            return view('analytics.index', compact(
+                'expensesByCategory', 
+                'trend', 
+                'budgetPerf', 
+                'daily', 
+                'month', 
+                'year',
+                'totalIncome',
+                'totalExpenses',
+                'totalBudget',
+                'budgetUsagePercent',
+                'savingsRate'
+            ));
      }
 
      
      protected function getExpensesByCategory($userId, $month, $year)
      {
             // Logic to get expenses by category
-            $rows = \DB::table('expenses')
+            $rows = DB::table('expenses')
                 ->join('categories', 'expenses.category_id', '=', 'categories.id')
-                ->select('categories.name as category', \DB::raw('SUM(expenses.amount) as total'))
+                ->select('categories.name as category', DB::raw('SUM(expenses.amount) as total'))
                 ->where('expenses.user_id', $userId)
                 ->whereMonth('expenses.transaction_date', $month)
                 ->whereYear('expenses.transaction_date', $year)
@@ -50,13 +88,13 @@ class AnalyticsController extends Controller
                      $m = $dt->month;
                      $y = $dt->year;
 
-                     $inc = \DB::table('incomes')
+                     $inc = DB::table('incomes')
                             ->where('user_id', $userId)
                             ->whereMonth('transaction_date', $m)
                             ->whereYear('transaction_date', $y)
                             ->sum('amount');
 
-                     $exp = \DB::table('expenses')
+                     $exp = DB::table('expenses')
                             ->where('user_id', $userId)
                             ->whereMonth('transaction_date', $m)
                             ->whereYear('transaction_date', $y)
@@ -76,7 +114,7 @@ class AnalyticsController extends Controller
 
        protected function getBudgetPerformance($userId, $month, $year)
        {
-              $rows = \DB::table('budgets')
+              $rows = DB::table('budgets')
                      ->join('categories', 'budgets.category_id', '=', 'categories.id')
                      ->leftJoin('expenses', function ($join) use ($month, $year, $userId) {
                             $join->on('expenses.category_id', '=', 'budgets.category_id')
@@ -85,7 +123,9 @@ class AnalyticsController extends Controller
                                    ->whereYear('expenses.transaction_date', $year);
                      })
                      ->where('budgets.user_id', $userId)
-                     ->select('categories.name as category', 'budgets.amount as budget', \DB::raw('COALESCE(SUM(expenses.amount),0) as spent'))
+                     ->where('budgets.month', $month)
+                     ->where('budgets.year', $year)
+                     ->select('categories.name as category', 'budgets.amount as budget', DB::raw('COALESCE(SUM(expenses.amount),0) as spent'))
                      ->groupBy('categories.name', 'budgets.amount')
                      ->get();
 
@@ -109,8 +149,8 @@ class AnalyticsController extends Controller
               $expensesByDay = array_fill(0, $daysInMonth, 0.0);
               $incomeByDay = array_fill(0, $daysInMonth, 0.0);
 
-              $expRows = \DB::table('expenses')
-                     ->select(\DB::raw('DAY(transaction_date) as day'), \DB::raw('SUM(amount) as total'))
+              $expRows = DB::table('expenses')
+                     ->select(DB::raw('DAY(transaction_date) as day'), DB::raw('SUM(amount) as total'))
                      ->where('user_id', $userId)
                      ->whereYear('transaction_date', $year)
                      ->whereMonth('transaction_date', $month)
@@ -124,8 +164,8 @@ class AnalyticsController extends Controller
                      }
               }
 
-              $incRows = \DB::table('incomes')
-                     ->select(\DB::raw('DAY(transaction_date) as day'), \DB::raw('SUM(amount) as total'))
+              $incRows = DB::table('incomes')
+                     ->select(DB::raw('DAY(transaction_date) as day'), DB::raw('SUM(amount) as total'))
                      ->where('user_id', $userId)
                      ->whereYear('transaction_date', $year)
                      ->whereMonth('transaction_date', $month)
@@ -144,7 +184,6 @@ class AnalyticsController extends Controller
                      $net[] = $incomeByDay[$i] - $expensesByDay[$i];
               }
 
-              return compact('labels', 'incomeByDay', 'expensesByDay', 'net');
+              return compact('labels', 'net');
        }
-
 }

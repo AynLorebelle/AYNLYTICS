@@ -72,7 +72,7 @@
     <div class="d-flex justify-content-between align-items-center mb-4">
         <div>
             <h1 class="mb-1 fw-bold text-white">Analytics Dashboard</h1>
-            <p class="text-muted mb-0">Financial insights for {{ \Carbon\Carbon::create()->month($month)->format('F Y') }}</p>
+            <p class="text-light mb-0">Financial insights for {{ \Carbon\Carbon::create()->month($month)->format('F Y') }}</p>
         </div>
         <div class="d-flex gap-2">
             <button class="btn btn-outline-light btn-sm">
@@ -90,39 +90,33 @@
             <div class="summary-card">
                 <div class="d-flex justify-content-between align-items-start">
                     <div>
-                        <p class="text-muted mb-1 small">Total Income</p>
+                        <p class="text-light mb-1 small">Total Income</p>
                         <h3 class="mb-0 fw-bold text-success">₱{{ number_format($totalIncome ?? 0, 2) }}</h3>
                     </div>
                     <div class="icon-circle" style="background-color: rgba(16, 185, 129, 0.1);">
                         <i class="bi bi-arrow-up-circle text-success fs-4"></i>
                     </div>
                 </div>
-                <p class="text-success small mb-0 mt-2">
-                    <i class="bi bi-graph-up-arrow me-1"></i>+12% from last month
-                </p>
             </div>
         </div>
         <div class="col-md-6 col-lg-3">
             <div class="summary-card">
                 <div class="d-flex justify-content-between align-items-start">
                     <div>
-                        <p class="text-muted mb-1 small">Total Expenses</p>
+                        <p class="text-light mb-1 small">Total Expenses</p>
                         <h3 class="mb-0 fw-bold text-danger">₱{{ number_format($totalExpenses ?? 0, 2) }}</h3>
                     </div>
                     <div class="icon-circle" style="background-color: rgba(239, 68, 68, 0.1);">
                         <i class="bi bi-arrow-down-circle text-danger fs-4"></i>
                     </div>
                 </div>
-                <p class="text-danger small mb-0 mt-2">
-                    <i class="bi bi-graph-down-arrow me-1"></i>-3% from last month
-                </p>
             </div>
         </div>
         <div class="col-md-6 col-lg-3">
             <div class="summary-card">
                 <div class="d-flex justify-content-between align-items-start">
                     <div>
-                        <p class="text-muted mb-1 small">Net Balance</p>
+                        <p class="text-light mb-1 small">Net Balance</p>
                         <h3 class="mb-0 fw-bold text-primary">₱{{ number_format(($totalIncome ?? 0) - ($totalExpenses ?? 0), 2) }}</h3>
                     </div>
                     <div class="icon-circle" style="background-color: rgba(59, 130, 246, 0.1);">
@@ -130,7 +124,7 @@
                     </div>
                 </div>
                 <p class="text-primary small mb-0 mt-2">
-                    <i class="bi bi-info-circle me-1"></i>Savings rate: 35%
+                    <i class="bi bi-info-circle me-1"></i>Savings rate: {{ $savingsRate ?? 0 }}%
                 </p>
             </div>
         </div>
@@ -138,15 +132,15 @@
             <div class="summary-card">
                 <div class="d-flex justify-content-between align-items-start">
                     <div>
-                        <p class="text-muted mb-1 small">Budget Status</p>
-                        <h3 class="mb-0 fw-bold text-warning">78%</h3>
+                        <p class="text-light mb-1 small">Budget Status</p>
+                        <h3 class="mb-0 fw-bold text-warning">{{ $budgetUsagePercent ?? 0 }}%</h3>
                     </div>
                     <div class="icon-circle" style="background-color: rgba(251, 191, 36, 0.1);">
                         <i class="bi bi-pie-chart text-warning fs-4"></i>
                     </div>
                 </div>
                 <div class="progress mt-2" style="height: 6px; background-color: #1f2937;">
-                    <div class="progress-bar bg-warning" role="progressbar" style="width: 78%"></div>
+                    <div class="progress-bar {{ ($budgetUsagePercent ?? 0) > 100 ? 'bg-danger' : 'bg-warning' }}" role="progressbar" style="width: {{ min($budgetUsagePercent ?? 0, 100) }}%"></div>
                 </div>
             </div>
         </div>
@@ -217,6 +211,7 @@
 </div>
 </div>
 @endsection
+
 @push('scripts')
 <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
 <script>
