@@ -353,7 +353,7 @@
 
     <!-- Analytics -->
     <a class="nav-link menu-item" 
-       href="" 
+       href="{{ route('analytics.index') }}" 
        onclick="setActive(2)">
         <svg class="icon" fill="none" stroke="currentColor" viewBox="0 0 24 24">
             <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M13 7h8m0 0v8m0-8l-8 8-4-4-6 6"></path>
@@ -524,63 +524,6 @@
                 </div>
             </div>
 
-            <div class="content-card" id="charts-area">
-                <div class="card-header">
-                    <h3>Insights</h3>
-                </div>
-
-                <div class="charts-grid" style="display:grid; grid-template-columns: repeat(2, 1fr); gap: 20px;">
-                    <!-- Expenses by Category -->
-                    <div class="chart-panel" id="panel-expense-category" style="background:#071a2b; border-radius:12px; padding:16px; border:1px solid rgba(255,255,255,0.03);">
-                        <div class="card-header" style="margin-bottom:8px; align-items:center;">
-                            <h3 style="font-size:16px;">Expenses by category — {{ now()->format('F Y') }}</h3>
-                            <div style="margin-left:auto; color:#9ca3af; font-size:12px;">Click a slice for details</div>
-                        </div>
-                        <div style="min-height:260px; display:flex; align-items:center; justify-content:center;">
-                            <div class="loader" data-target="#expenseCategoryChart">Loading...</div>
-                            <canvas id="expenseCategoryChart" style="width:100%; max-width:420px; display:none"></canvas>
-                        </div>
-                        <div id="expenseCategoryLegend" style="margin-top:10px; display:flex; gap:8px; flex-wrap:wrap"></div>
-                    </div>
-
-                    <!-- Income vs Expenses Trend -->
-                    <div class="chart-panel" id="panel-trend" style="background:#071a2b; border-radius:12px; padding:16px; border:1px solid rgba(255,255,255,0.03);">
-                        <div class="card-header" style="margin-bottom:8px; align-items:center;">
-                            <h3 style="font-size:16px;">Income vs Expenses — Last 6 months</h3>
-                            <div style="margin-left:auto; color:#9ca3af; font-size:12px;">Income (green) • Expenses (red) • Balance (blue)</div>
-                        </div>
-                        <div style="min-height:260px; display:flex; align-items:center;">
-                            <div class="loader" data-target="#incomeTrendChart">Loading...</div>
-                            <canvas id="incomeTrendChart" style="display:none; width:100%"></canvas>
-                        </div>
-                    </div>
-
-                    <!-- Budget Performance -->
-                    <div class="chart-panel" id="panel-budget" style="background:#071a2b; border-radius:12px; padding:16px; border:1px solid rgba(255,255,255,0.03);">
-                        <div class="card-header" style="margin-bottom:8px; align-items:center;">
-                            <h3 style="font-size:16px;">Budget performance — {{ now()->format('F Y') }}</h3>
-                            <div style="margin-left:auto; color:#9ca3af; font-size:12px;">Budget vs Spent (per category)</div>
-                        </div>
-                        <div style="min-height:260px; display:flex; align-items:center;">
-                            <div class="loader" data-target="#budgetChart">Loading...</div>
-                            <canvas id="budgetChart" style="display:none; width:100%"></canvas>
-                        </div>
-                    </div>
-
-                    <!-- Monthly Spending Trend -->
-                    <div class="chart-panel" id="panel-daily" style="background:#071a2b; border-radius:12px; padding:16px; border:1px solid rgba(255,255,255,0.03);">
-                        <div class="card-header" style="margin-bottom:8px; align-items:center;">
-                            <h3 style="font-size:16px;">Daily spending — {{ now()->format('F Y') }}</h3>
-                            <div style="margin-left:auto; color:#9ca3af; font-size:12px;">Cumulative & daily trend</div>
-                        </div>
-                        <div style="min-height:260px; display:flex; align-items:center;">
-                            <div class="loader" data-target="#dailyChart">Loading...</div>
-                            <canvas id="dailyChart" style="display:none; width:100%"></canvas>
-                        </div>
-                    </div>
-                </div>
-
-            </div>
         </div>
     </main>
 
@@ -602,8 +545,6 @@
             toggleMenu();
         }    
     </script>
-    <!-- Chart.js CDN -->
-    <script src="https://cdn.jsdelivr.net/npm/chart.js@4.4.0/dist/chart.umd.min.js"></script>
     <script>
         // Small helper: format currency
         function fmt(amount) {
@@ -620,160 +561,6 @@
             canvas.style.display = 'block';
         }
 
-        async function loadDashboardCharts() {
-            try {
-                const res = await fetch('/app/dashboard/charts');
-                if (!res.ok) throw new Error('Failed to fetch charts data');
-                const data = await res.json();
-
-                // COLORS per brand
-                const PRIMARY = '#caa739';
-                const SECONDARY = '#08b0d1';
-                const SUCCESS = '#26a69a';
-                const DANGER = '#ef4444';
-                const PANEL = '#0b2738';
-
-                // ---- EXPENSES BY CATEGORY (doughnut) ----
-                (function(){
-                    const meta = data.expenses_by_category || [];
-                    const labels = meta.map(m => m.label);
-                    const values = meta.map(m => m.value);
-                    const colors = meta.map(m => m.color || SECONDARY);
-
-                    const ctx = document.getElementById('expenseCategoryChart');
-                    if (!ctx) return;
-                    showLoaded('#expenseCategoryChart');
-
-                    const doughnut = new Chart(ctx, {
-                        type: 'doughnut',
-                        data: { labels, datasets: [{ data: values, backgroundColor: colors, borderWidth: 1 }] },
-                        options: {
-                            responsive: true,
-                            plugins: {
-                                tooltip: {
-                                    callbacks: {
-                                        label: ctx => `${ctx.label}: ${fmt(ctx.raw)} (${(ctx.raw / values.reduce((a,b)=>a+b,0) * 100).toFixed(1)}%)`
-                                    }
-                                },
-                                legend: { display: false }
-                            },
-                            onClick(evt, elements) {
-                                if (!elements.length) return;
-                                const idx = elements[0].index;
-                                const item = meta[idx];
-                                alert(`${item.label}\nAmount: ${fmt(item.value)}\n${item.percent}% of month\nClick view details in Categories/Expenses to dig deeper.`);
-                            }
-                        }
-                    });
-
-                    // build legend
-                    const legend = document.getElementById('expenseCategoryLegend');
-                    if (legend) {
-                        legend.innerHTML = '';
-                        meta.forEach(m => {
-                            const el = document.createElement('div');
-                            el.style.display = 'flex'; el.style.alignItems = 'center'; el.style.gap='8px'; el.style.margin='4px';
-                            el.innerHTML = `<div style="width:10px;height:10px;background:${m.color};border-radius:2px"></div><div style='font-size:12px;color:#cbd5e1;'>${m.label}: ${fmt(m.value)} (${m.percent}%)</div>`;
-                            legend.appendChild(el);
-                        })
-                    }
-                })();
-
-                // ---- INCOME VS EXPENSES TREND (line + balance) ----
-                (function(){
-                    const labels = data.trend.labels || [];
-                    const incomes = data.trend.income || [];
-                    const expenses = data.trend.expenses || [];
-                    const balances = data.trend.balance || [];
-
-                    const ctx = document.getElementById('incomeTrendChart');
-                    if (!ctx) return;
-                    showLoaded('#incomeTrendChart');
-
-                    new Chart(ctx, {
-                        type: 'line',
-                        data: {
-                            labels,
-                            datasets: [
-                                { label: 'Income', data: incomes, borderColor: SUCCESS, backgroundColor:'rgba(38,166,154,0.12)', tension:0.3, fill:false },
-                                { label: 'Expenses', data: expenses, borderColor: DANGER, backgroundColor:'rgba(239,68,68,0.08)', tension:0.3, fill:false },
-                                { label: 'Balance', data: balances, borderColor: SECONDARY, backgroundColor:'rgba(8,176,209,0.06)', tension:0.3, borderDash:[5,5], fill:false }
-                            ]
-                        },
-                        options: {
-                            responsive:true,
-                            plugins: { tooltip: { callbacks: { label(ctx){ return `${ctx.dataset.label}: ${fmt(ctx.raw)}`; } } } },
-                            scales: { y: { ticks: { callback: v => fmt(v) } } }
-                        }
-                    });
-                })();
-
-                // ---- BUDGET PERFORMANCE (grouped bar) ----
-                (function(){
-                    const rows = data.budget_performance || [];
-                    const labels = rows.map(r => r.label);
-                    const budgets = rows.map(r => r.budget);
-                    const spent = rows.map(r => r.spent);
-                    const colors = rows.map(r => r.color || PRIMARY);
-
-                    const ctx = document.getElementById('budgetChart');
-                    if (!ctx) return;
-                    showLoaded('#budgetChart');
-
-                    new Chart(ctx, {
-                        type: 'bar',
-                        data: {
-                            labels,
-                            datasets: [
-                                { label: 'Budget', data: budgets, backgroundColor: colors.map(c=>PRIMARY), categoryPercentage:0.6 },
-                                { label: 'Spent', data: spent, backgroundColor: colors.map(c=> 'rgba(255,165,0,0.9)'), categoryPercentage:0.6 }
-                            ]
-                        },
-                        options: {
-                            responsive:true,
-                            plugins: {
-                                tooltip: { callbacks: { label(ctx){ return `${ctx.dataset.label}: ${fmt(ctx.raw)}`; } } },
-                                legend: { position:'bottom' }
-                            },
-                            scales: { y: { ticks: { callback: v => fmt(v) } } }
-                        }
-                    });
-                })();
-
-                // ---- DAILY SPENDING (area + cumulative) ----
-                (function(){
-                    const rows = data.daily_spending || [];
-                    const labels = rows.map(r=> r.day);
-                    const daily = rows.map(r=> r.amount);
-                    const cumulative = rows.map(r=> r.cumulative);
-
-                    const ctx = document.getElementById('dailyChart');
-                    if (!ctx) return;
-                    showLoaded('#dailyChart');
-
-                    new Chart(ctx, {
-                        type: 'line',
-                        data: {
-                            labels,
-                            datasets: [
-                                { label: 'Daily', data: daily, borderColor: DANGER, backgroundColor: 'rgba(239,68,68,0.12)', tension:0.25, fill:false },
-                                { label: 'Cumulative', data: cumulative, borderColor: PRIMARY, backgroundColor: 'rgba(202,167,57,0.14)', tension:0.25, fill:true }
-                            ]
-                        },
-                        options: {
-                            responsive:true,
-                            plugins: { tooltip: { callbacks: { label(ctx){ return `${ctx.dataset.label}: ${fmt(ctx.raw)}`; } } } },
-                            scales: { y: { ticks: { callback: v => fmt(v) } } }
-                        }
-                    });
-                })();
-
-            } catch (err) {
-                console.error('Charts load error', err);
-                // hide loaders
-                document.querySelectorAll('.loader').forEach(l=> l.textContent='Unable to load');
-            }
-        }
 
         window.addEventListener('DOMContentLoaded', loadDashboardCharts);
     </script>
