@@ -90,8 +90,7 @@
             max-width: 300px;
             height: 300px;
             position: relative;
-            margin-bottom: -70px;
-            
+            margin-bottom: -70px; 
             
         }
 
