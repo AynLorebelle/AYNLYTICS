@@ -50,9 +50,9 @@
         }
 
         /* Individual icon buttons */
-        .header-icon {
+         .header-icon {
             position: relative;
-            padding: 8px;
+            padding: 5px;
             color: #ffffffff;
             background: transparent;
             border: none;
@@ -62,7 +62,7 @@
             display: flex;
             align-items: center;
             justify-content: center;
-            margin-right: 50px;
+            margin-right: 25px;
             
             
         }
@@ -181,12 +181,16 @@
         }
         
         .menu-item:hover {
-            background-color: #1f2937;
-            color: white;
+            box-shadow: 
+                0 5px 25px rgba(77, 152, 244, 0.6),
+                0 0 0 0px rgba(251, 252, 255, 0.2);
+            background: transparent;
         }
         
         .menu-item.active {
-            background-color: #2563eb;
+            background-color: tranparent;
+            border: 2px solid #FFD166;
+            boreder-radius: 8px;
             color: white;
         }
         
@@ -204,10 +208,13 @@
             font-size: 28px;
             font-weight: bold;
             margin-bottom: 8px;
+            margin-left: -10px;
         }
         
         .welcome-section p {
             color: #9ca3af;
+             margin-left: -10px;
+
         }
         
         .stats-grid {
@@ -389,16 +396,16 @@
                 </div>
 
                 <div class="header-actions">
-                  <a href="{{ route('profile.edit') }}" class="menu-item {{ request()->routeIs('profile.edit') ? 'active' : '' }}">
+                  <a href="{{ route('profile.edit') }}" class="header-icon {{ request()->routeIs('profile.edit') ? 'active' : '' }}>
                 <button class="header-icon" onclick="toggleProfile()">
             <svg class="icon" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                 <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" 
                       d="M16 7a4 4 0 11-8 0 4 4 0 018 0zM12 14a7 7 0 00-7 7h14a7 7 0 00-7-7z">
-                </path>
+                </path> 
             </svg>
           
         </button>
-    </a>
+   </a>
 
                 <button class="header-icon " onclick="toggleNotifications()">
             <svg class="icon" fill="none" stroke="currentColor" viewBox="0 0 24 24">
@@ -488,7 +495,7 @@
 <!-- Main Content -->
 <main class="main-content">
     <div class="welcome-section">
-        <h2>Welcome back</h2>
+        <h2>Welcome back !</h2>
         <p>Here's what's happening with your finances today.</p>
     </div>
 

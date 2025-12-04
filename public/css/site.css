@@ -40,9 +40,10 @@ section.col-md-9 {
   border:1px solid rgba(255, 255, 255, 0.03);
   box-shadow:7px 8px 200px rgba(255, 255, 255, 0.3);
   border-color: #ffffff;
-  margin: 50px auto 0 auto; /* Centered with top margin */
+  margin-top:50px;
   max-width: 1400px; /* Limit max width */
   width: 100%; /* Full width up to max */
+  
 }
 
 .card .card-body{
@@ -60,6 +61,9 @@ section.col-md-9 {
   border:1px solid rgba(255,255,255,0.03);
   margin: 0 auto; /* Center dark cards too */
   max-width: 1400px;
+  margin-top:100px;
+  margin-right:100px
+  
 }
 
 .dark-card .card-body{color:rgba(255, 255, 255, 0.95)}
@@ -69,18 +73,17 @@ section.col-md-9 {
 .dark-card .form-control{background:rgba(255,255,255,0.04);border:1px solid rgba(255,255,255,0.05);color:var(--ayn-white)}
 .dark-card .form-select{background:rgba(255,255,255,0.04);border:1px solid rgba(255,255,255,0.05);color:var(--ayn-white)}
 
-.incomes-card{
-  margin: 0 auto;
-  max-width: 1400px;
-}
+
 
 /* Tables in dark cards */
 .table-card thead th{
   background:rgba(255,255,255,0.03);
   border-bottom:0;
   color:rgba(255,255,255,.9);
-  padding: 1rem;
+  padding: 15px ;
   font-weight: 600;
+  
+  
 }
 
 .table-card tbody td{
@@ -90,7 +93,8 @@ section.col-md-9 {
   padding: 1rem;
 }
 
-.table-card tbody tr:hover td{background:rgba(255,255,255,0.01)}
+.table-card tbody tr:hover 
+  td{background:rgba(255,255,255,0.01)}
 
 .categories-card{
   padding-bottom: 50px;
@@ -128,7 +132,9 @@ section.col-md-9 {
   background: transparent;
   color: #ffffffff;
   border: 2px solid #87CEEB;
-  margin-bottom: 0;
+  margin-top: 14px;
+  margin-bottom:auto;
+  margin-right: -1260px ;
 }
 
 .ayn-cta:hover{ 
@@ -138,11 +144,7 @@ section.col-md-9 {
   box-shadow: 0 8px 20px rgba(135, 206, 235, 0.3);
 }
 
-.btn-outline-primary{
-  border-color:var(--ayn-blue);
-  color:var(--ayn-blue);
-  transition: all 0.2s;
-}
+
 
 .btn-outline-primary:hover{
   background:var(--ayn-blue);

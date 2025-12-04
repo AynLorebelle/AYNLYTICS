@@ -22,7 +22,7 @@
             <tr>
               <td>{{ $e->transaction_date->format('Y-m-d') }}</td>
               <td>{{ $e->category->name ?? '—' }}</td>
-              <td class="text-end">&#8369;{{ number_format($e->amount,2) }}</td>
+              <td>&#8369;{{ number_format($e->amount,2) }}</td>
               <td>{{ Str::limit($e->description,50) }}</td>
               <td class="text-end">
                 <div class="action-btns">

@@ -3,7 +3,7 @@
 @section('title','New Expense')
 
 @section('content')
-  <h3 class="mb-3">New Expense</h3>
+  <h3 class="mb-3"></h3>
   <div class="card dark-card">
     <div class="card-body">
       <form action="{{ route('expenses.store') }}" method="POST">

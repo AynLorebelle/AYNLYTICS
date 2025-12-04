@@ -58,7 +58,7 @@
         /* Individual icon buttons */
         .header-icon {
             position: relative;
-            padding: 8px;
+            padding: 5px;
             color: #ffffffff;
             background: transparent;
             border: none;
@@ -68,7 +68,7 @@
             display: flex;
             align-items: center;
             justify-content: center;
-            margin-right: 50px;
+            margin-right: 25px;
             
             
         }
@@ -186,16 +186,22 @@
             text-align: left;  
         }
         
-        .menu-item:hover {
-            background-color: #1f2937;
-            color: white;
+        .menu-item:hover { 
+             .menu-item:hover {
+            box-shadow: 
+                0 5px 25px rgba(77, 152, 244, 0.6),
+                0 0 0 0px rgba(251, 252, 255, 0.2);
+            background: transparent;
+        }
+        
         }
         
         .menu-item.active {
-            background-color: #2563eb;
+            background-color: tranparent;
+            border: 2px solid #FFD166;
+            boreder-radius: 8px;
             color: white;
         }
-        
         .main-content {
             max-width: 1280px;
             margin: 0 auto;
@@ -210,10 +216,13 @@
             font-size: 28px;
             font-weight: bold;
             margin-bottom: 8px;
+            margin-left: -10px;
+            
         }
         
         .welcome-section p {
             color: #9ca3af;
+            margin-left: -10px;
         }
         
         .stats-grid {
@@ -403,7 +412,6 @@
                       d="M16 7a4 4 0 11-8 0 4 4 0 018 0zM12 14a7 7 0 00-7 7h14a7 7 0 00-7-7z">
                 </path>
             </svg>
-          
         </button>
     </a>
 

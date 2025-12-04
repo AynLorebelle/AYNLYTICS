@@ -4,7 +4,7 @@
 @section('title','New Budget')
 
 @section('content')
-<h3 class="text-white mb-3">New Budget</h3>
+<h3 class="text-white mb-3"></h3>
 
 <div class="card dark-card">
   <div class="card-body">

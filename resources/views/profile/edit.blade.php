@@ -9,6 +9,94 @@
     <link rel="stylesheet" href="{{ asset('css/site.css') }}">
     
     <style>
+        body {
+            padding-top: 70px; /* Space for fixed navbar */
+            background: #0a1628;
+        }
+
+        /* Navbar Styles */
+        .ayn-navbar {
+            background: #0a1e36;
+            border-bottom: 1px solid rgba(255,255,255,0.1);
+            position: fixed;
+            top: 0;
+            left: 0;
+            right: 0;
+            z-index: 1000;
+            padding: 10px;
+        }
+
+        .brand-logo-container {
+            width: 70px;
+            height: 70px;
+            flex-shrink: 0;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            margin-right: 0.5rem;
+        }
+
+        .brand-logo {
+            width: 130px;
+            height: 130px;
+            margin-top: 15px;
+            margin-left: 80px;
+            margin-right: -20px;
+            object-fit: contain;
+        }
+
+        .navbar-brand {
+            display: flex;
+            align-items: center;
+            gap: 0.5rem;
+            color: #FFD166 !important;
+            font-weight: 600;
+            font-size: 1.25rem;
+            text-decoration: none;
+            
+        }
+
+        .navbar-brand:hover {
+            color: #FFE100 !important;
+        }
+
+        .ayn-navbar .nav-link {
+            color: rgba(255,255,255,0.8);
+            transition: color 0.2s;
+            margin-right: 50px;
+        }
+
+        .ayn-navbar .nav-link:hover {
+            color: #FFD166;
+        }
+
+        .ayn-cta {
+            background: linear-gradient(135deg, #FFD166, #FFE100);
+            color: #052536;
+            border: none;
+            padding: 0.5rem 1.5rem;
+            font-weight: 600;
+            border-radius: 6px;
+            transition: all 0.2s;
+            margin-right: 30px;
+            margin-top: 5px;
+        }
+
+        .ayn-cta:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 4px 12px rgba(255, 209, 102, 0.3);
+            color: #052536;
+        }
+
+        .navbar-toggler {
+            border-color: rgba(255,255,255,0.2);
+        }
+
+        .navbar-toggler-icon {
+            background-image: url("data:image/svg+xml,%3csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 30 30'%3e%3cpath stroke='rgba(255, 209, 102, 1)' stroke-linecap='round' stroke-miterlimit='10' stroke-width='2' d='M4 7h22M4 15h22M4 23h22'/%3e%3c/svg%3e");
+        }
+
+        /* Profile Header */
         .profile-header {
             background: linear-gradient(135deg, #154973, #4A70A9);
             padding: 2rem;
@@ -73,6 +161,7 @@
             background: transparent;
             border-bottom: 3px solid transparent;
             transition: all 0.2s;
+            
         }
         
         .nav-tabs .nav-link:hover {
@@ -110,17 +199,61 @@
             font-size: 0.875rem;
             margin: 0;
         }
+
+        .card {
+            background: #0f2938;
+            border: 1px solid rgba(255,255,255,0.05);
+            border-radius: 12px;
+        }
+
+        .dark-card {
+            background: rgba(15, 41, 56, 0.5);
+            border: 1px solid rgba(255,255,255,0.05);
+        }
+
+        .form-label {
+            color: rgba(255,255,255,0.9);
+            font-weight: 500;
+            margin-bottom: 0.5rem;
+        }
+
+        .form-control, .form-select {
+            background: rgba(255,255,255,0.05);
+            border: 1px solid rgba(255,255,255,0.1);
+            color: #ffffff;
+        }
+
+        .form-control:focus, .form-select:focus {
+            background: rgba(255,255,255,0.08);
+            border-color: #FFD166;
+            color: #ffffff;
+            box-shadow: 0 0 0 0.25rem rgba(255, 209, 102, 0.1);
+        }
+
+        .form-check-input {
+            background-color: rgba(255,255,255,0.1);
+            border-color: rgba(255,255,255,0.2);
+        }
+
+        .form-check-input:checked {
+            background-color: #FFD166;
+            border-color: #FFD166;
+        }
+
+        .form-check-label {
+            color: rgba(255,255,255,0.9);
+        }
     </style>
 </head>
 <body>
     <!-- Navigation -->
     <nav class="navbar navbar-expand-lg ayn-navbar">
         <div class="container-fluid px-4">
-            <a class="navbar-brand d-flex align-items-center gap-2" href="{{ route('dashboard') }}">
-                <div style="width: 40px; height: 40px; background: linear-gradient(135deg, #4A70A9, #87CEEB); border-radius: 8px; display: flex; align-items: center; justify-content: center; font-size: 1.25rem;">
-                    📊
+            <a class="navbar-brand" href="{{ route('dashboard') }}">
+                <div class="brand-logo-container">
+                    <img src="{{ asset('build/image/2.svg') }}" alt="AYNLYTICS Logo" class="brand-logo">
                 </div>
-                <span>AYNLYTICS</span>
+                
             </a>
             
             <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbarNav">
@@ -137,10 +270,9 @@
                         <span class="nav-link">{{ Auth::user()->name }}</span>
                     </li>
                     <li class="nav-item">
-                        <form method="POST" action="{{ route('logout') }}" class="d-inline">
-                            @csrf
+                        <a href="{{ route('logout') }}" class="d-inline">
                             <button type="submit" class="btn ayn-cta">Log Out</button>
-                        </form>
+                        </a>
                     </li>
                     @endauth
                 </ul>
@@ -357,70 +489,70 @@
             <div class="col-lg-4">
                 <div class="stats-card mb-3">
                     <i class="bi bi-cash-stack" style="font-size: 2rem; color: #FFD166;"></i>
-                    <h3>₱{{ number_format($totalBudget, 2) }}</h3>
+                    <h3>₱{{ number_format($totalBudget ?? 0, 2) }}</h3>
                     <p>Total Budget This Month</p>
                 </div>
                 
                 <div class="stats-card mb-3">
                     <i class="bi bi-wallet2" style="font-size: 2rem; color: #ef4444;"></i>
-                    <h3>₱{{ number_format($totalExpenses, 2) }}</h3>
+                    <h3>₱{{ number_format($totalExpenses ?? 0, 2) }}</h3>
                     <p>Total Spent</p>
                 </div>
                 
                 <div class="stats-card mb-3">
-                    <i class="bi bi-piggy-bank" style="font-size: 2rem; color: {{ $remaining >= 0 ? '#10b981' : '#ef4444' }};"></i>
-                    <h3 style="color: {{ $remaining >= 0 ? '#10b981' : '#ef4444' }};">₱{{ number_format($remaining, 2) }}</h3>
+                    <i class="bi bi-piggy-bank" style="font-size: 2rem; color: {{ ($remaining ?? 0) >= 0 ? '#10b981' : '#ef4444' }};"></i>
+                    <h3 style="color: {{ ($remaining ?? 0) >= 0 ? '#10b981' : '#ef4444' }};">₱{{ number_format($remaining ?? 0, 2) }}</h3>
                     <p>Remaining Balance</p>
                 </div>
                 
                 <div class="stats-card mb-3">
                     <i class="bi bi-graph-up-arrow" style="font-size: 2rem; color: #10b981;"></i>
-                    <h3>₱{{ number_format($totalIncome, 2) }}</h3>
+                    <h3>₱{{ number_format($totalIncome ?? 0, 2) }}</h3>
                     <p>Total Income This Month</p>
                 </div>
 
-                <<div class="card dark-card">
-    <div class="card-body">
-        <h5 class="mb-3"><i class="bi bi-activity me-2"></i>Recent Activity</h5>
-        <div class="d-flex flex-column gap-3">
-            @forelse($recentExpenses as $expense)
-            <div class="d-flex align-items-start gap-2">
-                <i class="bi bi-circle-fill" style="color: #ef4444; font-size: 0.5rem; margin-top: 0.5rem;"></i>
-                <div style="flex: 1;">
-                    <p style="color: rgba(255,255,255,0.9); margin-bottom: 0.25rem; font-size: 0.875rem;">
-                        <strong>{{ $expense->category }}</strong>: {{ $expense->description ?? 'Expense' }} - ₱{{ number_format($expense->amount, 2) }}
-                    </p>
-                    <p style="color: rgba(255,255,255,0.5); margin: 0; font-size: 0.75rem;">
-                        {{ \Carbon\Carbon::parse($expense->transaction_date)->diffForHumans() }}
-                    </p>
+                <div class="card dark-card">
+                    <div class="card-body">
+                        <h5 class="mb-3" style="color: #FFD166;"><i class="bi bi-activity me-2"></i>Recent Activity</h5>
+                        <div class="d-flex flex-column gap-3">
+                            @forelse($recentExpenses ?? [] as $expense)
+                            <div class="d-flex align-items-start gap-2">
+                                <i class="bi bi-circle-fill" style="color: #ef4444; font-size: 0.5rem; margin-top: 0.5rem;"></i>
+                                <div style="flex: 1;">
+                                    <p style="color: rgba(255,255,255,0.9); margin-bottom: 0.25rem; font-size: 0.875rem;">
+                                        <strong>{{ $expense->category }}</strong>: {{ $expense->description ?? 'Expense' }} - ₱{{ number_format($expense->amount, 2) }}
+                                    </p>
+                                    <p style="color: rgba(255,255,255,0.5); margin: 0; font-size: 0.75rem;">
+                                        {{ \Carbon\Carbon::parse($expense->transaction_date)->diffForHumans() }}
+                                    </p>
+                                </div>
+                            </div>
+                            @empty
+                            @endforelse
+                            
+                            @forelse($recentIncomes ?? [] as $income)
+                            <div class="d-flex align-items-start gap-2">
+                                <i class="bi bi-circle-fill" style="color: #10b981; font-size: 0.5rem; margin-top: 0.5rem;"></i>
+                                <div style="flex: 1;">
+                                    <p style="color: rgba(255,255,255,0.9); margin-bottom: 0.25rem; font-size: 0.875rem;">
+                                        <strong>Income</strong>: {{ $income->description ?? 'Income' }} - ₱{{ number_format($income->amount, 2) }}
+                                    </p>
+                                    <p style="color: rgba(255,255,255,0.5); margin: 0; font-size: 0.75rem;">
+                                        {{ \Carbon\Carbon::parse($income->transaction_date)->diffForHumans() }}
+                                    </p>
+                                </div>
+                            </div>
+                            @empty
+                            @endforelse
+                            
+                            @if(empty($recentExpenses) && empty($recentIncomes))
+                            <p style="color: rgba(255,255,255,0.5); font-size: 0.875rem; text-align: center;">
+                                No recent activity
+                            </p>
+                            @endif
+                        </div>
+                    </div>
                 </div>
-            </div>
-            @empty
-            @endforelse
-            
-            @forelse($recentIncomes as $income)
-            <div class="d-flex align-items-start gap-2">
-                <i class="bi bi-circle-fill" style="color: #10b981; font-size: 0.5rem; margin-top: 0.5rem;"></i>
-                <div style="flex: 1;">
-                    <p style="color: rgba(255,255,255,0.9); margin-bottom: 0.25rem; font-size: 0.875rem;">
-                        <strong>Income</strong>: {{ $income->description ?? 'Income' }} - ₱{{ number_format($income->amount, 2) }}
-                    </p>
-                    <p style="color: rgba(255,255,255,0.5); margin: 0; font-size: 0.75rem;">
-                        {{ \Carbon\Carbon::parse($income->transaction_date)->diffForHumans() }}
-                    </p>
-                </div>
-            </div>
-            @empty
-            @endforelse
-            
-            @if($recentExpenses->isEmpty() && $recentIncomes->isEmpty())
-            <p style="color: rgba(255,255,255,0.5); font-size: 0.875rem; text-align: center;">
-                No recent activity
-            </p>
-            @endif
-        </div>
-    </div>
-</div>
             </div>
         </div>
     </main>
