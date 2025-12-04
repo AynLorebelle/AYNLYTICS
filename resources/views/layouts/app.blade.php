@@ -84,6 +84,7 @@
             background: transparent;
             border: none;
             cursor: pointer;
+            
         }
         
         .menu-open {
