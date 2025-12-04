@@ -28,7 +28,7 @@
         transform: translateY(-2px);
         box-shadow: 0 0.5rem 1rem rgba(0, 0, 0, 0.3) !important;
     }
-    
+
     .card-header {
         background-color: #111827;
         border-bottom: 1px solid #1f2937;
@@ -71,7 +71,7 @@
     <!-- Header Section -->
     <div class="d-flex justify-content-between align-items-center mb-4">
         <div>
-            <h1 class="mb-1 fw-bold text-white">Analytics Dashboard</h1>
+            <h1 class="mb-1 fw-bold text-white">Analytics Report</h1>
             <p class="text-light mb-0">Financial insights for {{ \Carbon\Carbon::create()->month($month)->format('F Y') }}</p>
         </div>
         <div class="d-flex gap-2">

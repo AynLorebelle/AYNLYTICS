@@ -110,4 +110,3 @@ $recentIncomes = DB::table('incomes')
         return Redirect::to('/');
     }
 }
-

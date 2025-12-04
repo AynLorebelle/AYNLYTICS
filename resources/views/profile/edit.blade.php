@@ -403,7 +403,7 @@
                 <i class="bi bi-circle-fill" style="color: #10b981; font-size: 0.5rem; margin-top: 0.5rem;"></i>
                 <div style="flex: 1;">
                     <p style="color: rgba(255,255,255,0.9); margin-bottom: 0.25rem; font-size: 0.875rem;">
-                        <strong>Income</strong>: {{ $income->source }} - ₱{{ number_format($income->amount, 2) }}
+                        <strong>Income</strong>: {{ $income->description ?? 'Income' }} - ₱{{ number_format($income->amount, 2) }}
                     </p>
                     <p style="color: rgba(255,255,255,0.5); margin: 0; font-size: 0.75rem;">
                         {{ \Carbon\Carbon::parse($income->transaction_date)->diffForHumans() }}
@@ -434,7 +434,7 @@
                 const reader = new FileReader();
                 reader.onload = function(e) {
                     const avatar = document.getElementById('profileAvatar');
-                    avatar.innerHTML = <img src="${e.target.result}" alt="Profile">;
+                    avatar.innerHTML = `<img src="${e.target.result}" alt="Profile">`;
                 };
                 reader.readAsDataURL(file);
             }
