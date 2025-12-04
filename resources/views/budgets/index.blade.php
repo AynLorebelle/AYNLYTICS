@@ -4,13 +4,11 @@
 
 @section('content')
 <div class="d-flex justify-content-between mb-3 mt-3 align-items-center">
-  <h3 class="text-white">Budget Management</h3>
-  <a href="{{ route('budgets.create') }}" class="btn ayn-cta">
-    <i class="bi bi-plus-circle me-2"></i>New Budget
-  </a>
+  <h3></h3>
+  <a href="{{ route('budgets.create') }}" class="btn ayn-cta"> New Budget</a>
 </div>
 
-<div class="card dark-card">
+<div class="card dark-card ">
   <div class="card-body">
     @if($budgets->count())
       <div class="table-responsive">
