@@ -11,7 +11,7 @@ use App\Http\Controllers\Admin\AdminController;
 use Illuminate\Support\Facades\Route;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth;
-
+use App\Http\Controllers\AnalyticsController;
 
 Route::get('/', function () {
     return view('welcome');
@@ -47,6 +47,10 @@ Route::middleware('auth')->group(function () {
     Route::resource('incomes', IncomeController::class);
     Route::resource('categories', CategoryController::class)->except(['show']);
     Route::resource('budgets', BudgetController::class)->except(['show']);
+
+    //Analytics
+    Route::get('analytics', [AnalyticsController::class, 'index'])->name('analytics.index');
+
 
     // Reports
     Route::get('reports', [ReportController::class, 'index'])->name('reports.index');

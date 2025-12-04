@@ -29,6 +29,9 @@ class DashboardController extends Controller
         $totalIncomes = (float) Income::where('user_id', $user->id)->forMonth($month, $year)->sum('amount');
         $totalBudgets = (float) Budget::where('user_id', $user->id)->where('month', $month)->where('year', $year)->sum('amount');
 
+        // CALCULATE REMAINING BUDGET (Budget - Expenses)
+        $remainingBudget = $totalBudgets - $totalExpenses;
+
         // previous month context (for percentage change)
         $prev = Carbon::create($year, $month, 1)->subMonth();
         $prevMonth = $prev->month; $prevYear = $prev->year;
@@ -36,6 +39,9 @@ class DashboardController extends Controller
         $prevExpenses = (float) Expense::where('user_id', $user->id)->forMonth($prevMonth, $prevYear)->sum('amount');
         $prevIncomes = (float) Income::where('user_id', $user->id)->forMonth($prevMonth, $prevYear)->sum('amount');
         $prevBudgets = (float) Budget::where('user_id', $user->id)->where('month', $prevMonth)->where('year', $prevYear)->sum('amount');
+
+        // CALCULATE PREVIOUS MONTH'S REMAINING BUDGET
+        $prevRemainingBudget = $prevBudgets - $prevExpenses;
 
         // helper to compute percent change safely
         $percentChange = function (float $current, float $previous) {
@@ -50,7 +56,8 @@ class DashboardController extends Controller
             return ['label' => round($change, 1), 'value' => $change, 'direction' => $direction];
         };
 
-        $budgetChange = $percentChange($totalBudgets, $prevBudgets);
+        // CHANGE budgetChange to use remainingBudget instead of totalBudgets
+        $budgetChange = $percentChange($remainingBudget, $prevRemainingBudget);
         $incomeChange = $percentChange($totalIncomes, $prevIncomes);
         $expenseChange = $percentChange($totalExpenses, $prevExpenses);
 
@@ -109,8 +116,9 @@ class DashboardController extends Controller
         // sort and take 10 (most recent first)
         $recentTransactions = $transactions->sortByDesc('transaction_date')->slice(0, 10)->values();
 
+        // ADD remainingBudget to the view data
         return view('dashboard', compact(
-            'totalExpenses', 'totalIncomes', 'totalBudgets',
+            'totalExpenses', 'totalIncomes', 'totalBudgets', 'remainingBudget',
             'prevExpenses', 'prevIncomes', 'prevBudgets',
             'budgetChange', 'incomeChange', 'expenseChange', 'savingsPercent', 'savingsChange',
             'recentTransactions'
