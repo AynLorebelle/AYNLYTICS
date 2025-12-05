@@ -19,12 +19,9 @@
         margin: 0 auto !important;
     }
 
-    /* -----------------------
-       Custom card (no flex)
-       ----------------------- */
     .ui-card {
-        display: block;                 /* Important: NOT flex (no stretch) */
-        background-color: #0f1724;      /* dark card background */
+        display: block;
+        background-color: #0f1724;
         border: 1px solid #1f2937;
         border-radius: 8px;
         transition: transform 0.2s, box-shadow 0.2s;
@@ -55,7 +52,6 @@
         background-color: transparent;
     }
 
-    /* Summary card (keeps your nice gradient look) */
     .summary-card {
         background: linear-gradient(135deg, #1f2937 0%, #111827 100%);
         border: 1px solid #1f2937;
@@ -81,37 +77,132 @@
         font-size: 0.875rem;
     }
 
-    /* Chart container: fixed height so Chart.js won't stretch */
     .chart-container {
         position: relative;
-        height: 260px;            /* fixed chart height — adjust as needed */
+        height: 260px;
         width: 100%;
     }
 
-    /* If you need different size for doughnut, override inline or with subclass */
     .chart-container.doughnut {
         height: 320px;
     }
 
-    /* Ensure canvas uses container height */
     .chart-container canvas {
         display: block;
         width: 100% !important;
         height: 100% !important;
     }
 
-    /* Small improvements: legend/label colors for dark theme (optional) */
     .text-white { color: #fff; }
     .text-light { color: #cbd5e1; }
     .fw-semibold { font-weight: 600; }
     .fw-bold { font-weight: 700; }
     .small { font-size: 0.85rem; }
+
+    /* Export dropdown styles */
+    .export-dropdown {
+        position: relative;
+        display: inline-block;
+    }
+
+    .export-dropdown-menu {
+        position: absolute;
+        right: 0;
+        top: 100%;
+        margin-top: 0.5rem;
+        background-color: #1f2937;
+        border: 1px solid #374151;
+        border-radius: 0.5rem;
+        box-shadow: 0 10px 25px rgba(0, 0, 0, 0.5);
+        min-width: 200px;
+        z-index: 1000;
+        display: none;
+    }
+
+    .export-dropdown-menu.show {
+        display: block;
+    }
+
+    .export-dropdown-item {
+        padding: 0.75rem 1rem;
+        color: #e5e7eb;
+        text-decoration: none;
+        display: flex;
+        align-items: center;
+        gap: 0.75rem;
+        cursor: pointer;
+        transition: background-color 0.2s;
+        border: none;
+        background: none;
+        width: 100%;
+        text-align: left;
+        font-size: 0.875rem;
+    }
+
+    .export-dropdown-item:hover {
+        background-color: #374151;
+    }
+
+    .export-dropdown-item:first-child {
+        border-radius: 0.5rem 0.5rem 0 0;
+    }
+
+    .export-dropdown-item:last-child {
+        border-radius: 0 0 0.5rem 0.5rem;
+    }
+
+    .export-dropdown-divider {
+        height: 1px;
+        background-color: #374151;
+        margin: 0.25rem 0;
+    }
+
+    /* Loading overlay */
+    .export-loading {
+        position: fixed;
+        top: 0;
+        left: 0;
+        right: 0;
+        bottom: 0;
+        background-color: rgba(0, 0, 0, 0.8);
+        display: none;
+        justify-content: center;
+        align-items: center;
+        z-index: 9999;
+    }
+
+    .export-loading.show {
+        display: flex;
+    }
+
+    .export-loading-content {
+        background-color: #1f2937;
+        padding: 2rem;
+        border-radius: 1rem;
+        text-align: center;
+        border: 1px solid #374151;
+    }
+
+    .export-spinner {
+        border: 4px solid #374151;
+        border-top: 4px solid #3b82f6;
+        border-radius: 50%;
+        width: 50px;
+        height: 50px;
+        animation: spin 1s linear infinite;
+        margin: 0 auto 1rem;
+    }
+
+    @keyframes spin {
+        0% { transform: rotate(0deg); }
+        100% { transform: rotate(360deg); }
+    }
 </style>
 @endpush
 
 @section('content')
 <div class="d-flex justify-content-center w-100">
-    <div class="analytics-wrapper">
+    <div class="analytics-wrapper" id="analytics-report">
         <!-- Header Section -->
         <div class="d-flex justify-content-between align-items-center mb-4">
             <div>
@@ -122,14 +213,31 @@
                 <button class="btn btn-outline-light btn-sm">
                     <i class="bi bi-calendar-range me-2"></i>Change Period
                 </button>
-                <button class="btn btn-primary btn-sm">
-                    <i class="bi bi-download me-2"></i>Export
-                </button>
+                <div class="export-dropdown">
+                    <button class="btn btn-primary btn-sm" id="exportButton">
+                        <i class="bi bi-download me-2"></i>Export
+                    </button>
+                    <div class="export-dropdown-menu" id="exportMenu">
+                        <button class="export-dropdown-item" onclick="exportAsPDF()">
+                            <i class="bi bi-file-pdf"></i>
+                            <span>Export as PDF</span>
+                        </button>
+                        <button class="export-dropdown-item" onclick="exportAsPNG()">
+                            <i class="bi bi-file-image"></i>
+                            <span>Export as PNG</span>
+                        </button>
+                        <div class="export-dropdown-divider"></div>
+                        <button class="export-dropdown-item" onclick="exportChartsOnly()">
+                            <i class="bi bi-bar-chart"></i>
+                            <span>Export Charts Only</span>
+                        </button>
+                    </div>
+                </div>
             </div>
         </div>
 
         <!-- Summary Cards -->
-        <div class="row g-3 mb-4">
+        <div class="row g-3 mb-4" id="summary-cards">
             <div class="col-md-6 col-lg-3">
                 <div class="summary-card">
                     <div class="d-flex justify-content-between align-items-start">
@@ -265,11 +373,23 @@
         </div>
     </div>
 </div>
+
+<!-- Loading Overlay -->
+<div class="export-loading" id="exportLoading">
+    <div class="export-loading-content">
+        <div class="export-spinner"></div>
+        <p class="text-white mb-0">Generating export...</p>
+    </div>
+</div>
 @endsection
 
 @push('scripts')
 <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/html2canvas/1.4.1/html2canvas.min.js"></script>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/jspdf/2.5.1/jspdf.umd.min.js"></script>
 <script>
+    let chartInstances = {};
+
     (function(){
         const expensesByCategory = @json($expensesByCategory ?? ['labels' => [], 'data' => []]);
         const trend = @json($trend ?? ['labels' => [], 'income' => [], 'expenses' => []]);
@@ -300,7 +420,7 @@
 
         // Expenses by category - Doughnut
         const ctx1 = document.getElementById('chart-expenses-by-category').getContext('2d');
-        new Chart(ctx1, {
+        chartInstances.expensesByCategory = new Chart(ctx1, {
             type: 'doughnut',
             data: {
                 labels: expensesByCategory.labels || [],
@@ -313,7 +433,7 @@
             },
             options: {
                 responsive: true,
-                maintainAspectRatio: false, // safe because container has fixed height
+                maintainAspectRatio: false,
                 plugins: {
                     legend: {
                         position: 'bottom',
@@ -346,7 +466,7 @@
 
         // Income vs Expenses trend - Line
         const ctx2 = document.getElementById('chart-income-vs-expenses').getContext('2d');
-        new Chart(ctx2, {
+        chartInstances.incomeVsExpenses = new Chart(ctx2, {
             type: 'line',
             data: {
                 labels: trend.labels || [],
@@ -381,7 +501,7 @@
             },
             options: {
                 responsive: true,
-                maintainAspectRatio: false, // safe because container has fixed height
+                maintainAspectRatio: false,
                 interaction: {
                     mode: 'index',
                     intersect: false,
@@ -427,7 +547,7 @@
 
         // Budget performance - Bar
         const ctx3 = document.getElementById('chart-budget-performance').getContext('2d');
-        new Chart(ctx3, {
+        chartInstances.budgetPerformance = new Chart(ctx3, {
             type: 'bar',
             data: {
                 labels: budgetPerf.labels || [],
@@ -448,7 +568,7 @@
             },
             options: {
                 responsive: true,
-                maintainAspectRatio: false, // safe because container has fixed height
+                maintainAspectRatio: false,
                 plugins: {
                     legend: {
                         position: 'bottom',
@@ -490,7 +610,7 @@
 
         // Daily net - Bar with conditional colors
         const ctx4 = document.getElementById('chart-daily-net').getContext('2d');
-        new Chart(ctx4, {
+        chartInstances.dailyNet = new Chart(ctx4, {
             type: 'bar',
             data: {
                 labels: daily.labels || [],
@@ -507,7 +627,7 @@
             },
             options: {
                 responsive: true,
-                maintainAspectRatio: false, // safe because container has fixed height
+                maintainAspectRatio: false,
                 plugins: {
                     legend: { display: false },
                     tooltip: {
@@ -545,5 +665,151 @@
 
     // Set current date in header
     document.getElementById('currentDate').textContent = new Date().toLocaleString('default', { month: 'long', year: 'numeric' });
+
+    // Export dropdown toggle
+    document.getElementById('exportButton').addEventListener('click', function(e) {
+        e.stopPropagation();
+        const menu = document.getElementById('exportMenu');
+        menu.classList.toggle('show');
+    });
+
+    // Close dropdown when clicking outside
+    document.addEventListener('click', function(e) {
+        const dropdown = document.querySelector('.export-dropdown');
+        const menu = document.getElementById('exportMenu');
+        if (!dropdown.contains(e.target)) {
+            menu.classList.remove('show');
+        }
+    });
+
+    // Export functions
+    function showLoading() {
+        document.getElementById('exportLoading').classList.add('show');
+        document.getElementById('exportMenu').classList.remove('show');
+    }
+
+    function hideLoading() {
+        document.getElementById('exportLoading').classList.remove('show');
+    }
+
+    async function exportAsPDF() {
+        showLoading();
+        
+        try {
+            const element = document.getElementById('analytics-report');
+            const canvas = await html2canvas(element, {
+                scale: 2,
+                backgroundColor: '#020617',
+                logging: false,
+                useCORS: true
+            });
+
+            const imgData = canvas.toDataURL('image/png');
+            const { jsPDF } = window.jspdf;
+            const pdf = new jsPDF({
+                orientation: 'portrait',
+                unit: 'mm',
+                format: 'a4'
+            });
+
+            const imgWidth = 210;
+            const pageHeight = 297;
+            const imgHeight = (canvas.height * imgWidth) / canvas.width;
+            let heightLeft = imgHeight;
+            let position = 0;
+
+            pdf.addImage(imgData, 'PNG', 0, position, imgWidth, imgHeight);
+            heightLeft -= pageHeight;
+
+            while (heightLeft >= 0) {
+                position = heightLeft - imgHeight;
+                pdf.addPage();
+                pdf.addImage(imgData, 'PNG', 0, position, imgWidth, imgHeight);
+                heightLeft -= pageHeight;
+            }
+
+            const fileName = `Analytics_Report_${new Date().toISOString().split('T')[0]}.pdf`;
+            pdf.save(fileName);
+        } catch (error) {
+            console.error('Export failed:', error);
+            alert('Export failed. Please try again.');
+        } finally {
+            hideLoading();
+        }
+    }
+
+    async function exportAsPNG() {
+        showLoading();
+        
+        try {
+            const element = document.getElementById('analytics-report');
+            const canvas = await html2canvas(element, {
+                scale: 2,
+                backgroundColor: '#020617',
+                logging: false,
+                useCORS: true
+            });
+
+            canvas.toBlob(function(blob) {
+                const url = URL.createObjectURL(blob);
+                const link = document.createElement('a');
+                const fileName = `Analytics_Report_${new Date().toISOString().split('T')[0]}.png`;
+                link.download = fileName;
+                link.href = url;
+                link.click();
+                URL.revokeObjectURL(url);
+                hideLoading();
+            });
+        } catch (error) {
+            console.error('Export failed:', error);
+            alert('Export failed. Please try again.');
+            hideLoading();
+        }
+    }
+
+    async function exportChartsOnly() {
+        showLoading();
+        
+        try {
+            const { jsPDF } = window.jspdf;
+            const pdf = new jsPDF({
+                orientation: 'portrait',
+                unit: 'mm',
+                format: 'a4'
+            });
+
+            const charts = [
+                { id: 'chart-expenses-by-category', title: 'Expenses by Category' },
+                { id: 'chart-income-vs-expenses', title: 'Income vs Expenses' },
+                { id: 'chart-budget-performance', title: 'Budget Performance' },
+                { id: 'chart-daily-net', title: 'Daily Net Flow' }
+            ];
+
+            for (let i = 0; i < charts.length; i++) {
+                if (i > 0) pdf.addPage();
+                
+                const canvas = document.getElementById(charts[i].id);
+                const imgData = canvas.toDataURL('image/png');
+                
+                // Add title
+                pdf.setFontSize(16);
+                pdf.setTextColor(255, 255, 255);
+                pdf.text(charts[i].title, 105, 20, { align: 'center' });
+                
+                // Add chart image
+                const imgWidth = 180;
+                const imgHeight = (canvas.height * imgWidth) / canvas.width;
+                pdf.addImage(imgData, 'PNG', 15, 30, imgWidth, imgHeight);
+            }
+
+            const fileName = `Analytics_Charts_${new Date().toISOString().split('T')[0]}.pdf`;
+            pdf.save(fileName);
+        } catch (error) {
+            console.error('Export failed:', error);
+            alert('Export failed. Please try again.');
+        } finally {
+            hideLoading();
+        }
+    }
 </script>
 @endpush
