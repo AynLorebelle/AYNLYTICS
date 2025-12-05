@@ -29,6 +29,7 @@
         border-radius: 8px;
         transition: transform 0.2s, box-shadow 0.2s;
         overflow: hidden;
+        height: 360px;
     }
 
     .ui-card:hover {
