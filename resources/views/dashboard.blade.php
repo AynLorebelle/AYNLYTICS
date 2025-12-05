@@ -397,7 +397,7 @@
 
                 <div class="header-actions">
                   <a href="{{ route('profile.edit') }}" class="header-icon {{ request()->routeIs('profile.edit') ? 'active' : '' }}>
-                <button class="header-icon" onclick="toggleProfile()">
+                <button class="header-icon " onclick="toggleProfile()">
             <svg class="icon" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                 <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" 
                       d="M16 7a4 4 0 11-8 0 4 4 0 018 0zM12 14a7 7 0 00-7 7h14a7 7 0 00-7-7z">

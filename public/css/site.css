@@ -40,7 +40,7 @@ section.col-md-9 {
   border:1px solid rgba(255, 255, 255, 0.03);
   box-shadow:7px 8px 200px rgba(255, 255, 255, 0.3);
   border-color: #ffffff;
-  margin-top:50px;
+  margin-top:500px;
   max-width: 1400px; /* Limit max width */
   width: 100%; /* Full width up to max */
   
@@ -68,11 +68,28 @@ section.col-md-9 {
 
 .dark-card .card-body{color:rgba(255, 255, 255, 0.95)}
 .dark-card h5{color:var(--ayn-gold)}
-.dark-card .small{color:rgba(255,255,255,.7)}
+.dark-card .small{color:rgba(130, 45, 45, 0.7)}
 .dark-card .form-label{color:rgba(255,255,255,.9)}
 .dark-card .form-control{background:rgba(255,255,255,0.04);border:1px solid rgba(255,255,255,0.05);color:var(--ayn-white)}
 .dark-card .form-select{background:rgba(255,255,255,0.04);border:1px solid rgba(255,255,255,0.05);color:var(--ayn-white)}
+.form-select option {
+  background-color: #0c222b !important;
+  color: #ffffff !important;
+}
 
+/* This styles the currently selected/focused option */
+.form-select option:checked,
+.form-select option:focus {
+  background: linear-gradient(90deg, rgba(232, 244, 77, 0.3), rgba(232, 244, 77, 0.1)) !important;
+  color: #FFD166 !important;
+  font-weight: 800;
+}
+
+/* For Firefox - uses different syntax */
+.form-select option:checked {
+  background-color: rgba(232, 244, 77, 0.2) !important;
+  color: #FFD166 !important;
+}
 
 
 /* Tables in dark cards */
@@ -81,7 +98,7 @@ section.col-md-9 {
   border-bottom:0;
   color:rgba(255,255,255,.9);
   padding: 15px ;
-  font-weight: 600;
+  font-weight: 800;
   
   
 }
