@@ -200,11 +200,36 @@
             margin: 0;
         }
 
-        .card {
-            background: #0f2938;
-            border: 1px solid rgba(255,255,255,0.05);
-            border-radius: 12px;
+        .ui-card {
+        background: #0f2938;
+        border: 1px solid #1f2937;
+        border-radius: 8px;
+        transition: transform 0.2s, box-shadow 0.2s;
+        overflow: hidden;
         }
+            .ui-card:hover {
+        transform: translateY(-4px);
+        box-shadow: 0 0.75rem 1.5rem rgba(2,6,23,0.6);
+    }
+
+    .ui-card-header {
+        background-color: transparent;
+        border-bottom: 1px solid rgba(31,41,55,0.6);
+        padding: 0.75rem 1rem;
+    }
+
+    .ui-card-header .title {
+        margin: 0;
+        font-weight: 600;
+        color: #ffffff;
+    }
+
+    .ui-card-body {
+        display: block;
+        padding: 0.75rem 1rem;
+        background-color: transparent;
+    }
+
 
         .dark-card {
             background: rgba(15, 41, 56, 0.5);
@@ -295,7 +320,7 @@
         <div class="row g-4">
             <!-- Main Profile Card -->
             <div class="col-lg-8">
-                <div class="card">
+                <div class="ui=card">
                     <!-- Profile Header -->
                     <div class="profile-header">
                         <div class="d-flex align-items-center gap-4">
@@ -510,8 +535,7 @@
                     <h3>₱{{ number_format($totalIncome ?? 0, 2) }}</h3>
                     <p>Total Income This Month</p>
                 </div>
-
-                <div class="card dark-card">
+                <div class="stats-card mb-3">
                     <div class="card-body">
                         <h5 class="mb-3" style="color: #FFD166;"><i class="bi bi-activity me-2"></i>Recent Activity</h5>
                         <div class="d-flex flex-column gap-3">
