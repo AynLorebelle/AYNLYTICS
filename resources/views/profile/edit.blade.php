@@ -290,16 +290,14 @@
                     <li class="nav-item">
                         <a class="nav-link" href="{{ route('dashboard') }}">Dashboard</a>
                     </li>
-                    @auth
+                  @auth
                     <li class="nav-item">
-                        <span class="nav-link">{{ Auth::user()->name }}</span>
-                    </li>
-                    <li class="nav-item">
-                        <a href="{{ route('logout') }}" class="d-inline">
+                        <form method="POST" action="{{ route('logout') }}" class="d-inline">
+                            @csrf
                             <button type="submit" class="btn ayn-cta">Log Out</button>
-                        </a>
+                        </form>
                     </li>
-                    @endauth
+                 @endauth
                 </ul>
             </div>
         </div>
