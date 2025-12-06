@@ -406,7 +406,7 @@
           
         </button>
    </a>
-
+                <a href="{{ route('notifications') }}" class="position-relative">
                 <button class="header-icon " onclick="toggleNotifications()">
             <svg class="icon" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                 <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" 
@@ -416,6 +416,7 @@
             <!-- Optional: Notification badge -->
             <span class="notification-badge">3</span>
         </button>
+    </a>
 
                 <button class="header-icon menu " onclick="toggleMenu()">
             <svg class="icon" fill="none" stroke="currentColor" viewBox="0 0 24 24">

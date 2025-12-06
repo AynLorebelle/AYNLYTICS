@@ -47,6 +47,11 @@ Route::middleware('auth')->group(function () {
     // Reports
     Route::get('reports', [ReportController::class, 'index'])->name('reports.index');
 
+    // Notifications
+   Route::get('/notifications', function () {
+    return view('notifications.index');  
+})->name('notifications');
+
     // Admin area (controller enforces admin)
     Route::prefix('admin')->name('admin.')->middleware('can:admin')->group(function () {
         Route::get('users', [AdminController::class, 'index'])->name('users.index');
