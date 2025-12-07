@@ -12,6 +12,7 @@ use Illuminate\Support\Facades\Route;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth;
 use App\Http\Controllers\AnalyticsController;
+use App\Http\Controllers\NotificationController;
 
 Route::get('/', function () {
     return view('welcome');
@@ -48,10 +49,11 @@ Route::middleware('auth')->group(function () {
     Route::get('reports', [ReportController::class, 'index'])->name('reports.index');
 
     // Notifications
-   Route::get('/notifications', function () {
-    return view('notifications.index');  
-})->name('notifications');
 
+Route::middleware(['auth'])->group(function () {
+    Route::get('/notifications', [NotificationController::class, 'index'])->name('notifications');
+    Route::post('/notifications/mark-all-read', [NotificationController::class, 'markAllRead'])->name('notifications.markAllRead');
+});
     // Admin area (controller enforces admin)
     Route::prefix('admin')->name('admin.')->middleware('can:admin')->group(function () {
         Route::get('users', [AdminController::class, 'index'])->name('users.index');
