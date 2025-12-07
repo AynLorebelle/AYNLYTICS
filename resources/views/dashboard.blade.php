@@ -414,7 +414,7 @@
                 </path>
             </svg>
             <!-- Optional: Notification badge -->
-            <span class="notification-badge">3</span>
+            <span class="notification-badge">!</span>
         </button>
     </a>
 

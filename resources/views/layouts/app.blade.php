@@ -423,7 +423,7 @@
                 </path>
             </svg>
             <!-- Optional: Notification badge -->
-            <span class="notification-badge">3</span>
+            <span class="notification-badge">!</span>
         </button>
     </a>
 
@@ -516,11 +516,13 @@
 <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/js/bootstrap.bundle.min.js"></script>
 <script src="https://cdn.jsdelivr.net/npm/chart.js@4.4.0/dist/chart.umd.min.js"></script>
 <script>
+    
     function toggleMenu() {
       const menu = document.getElementById('menu');
       if (!menu) return;
       menu.classList.toggle('hidden');
     }
+
   document.addEventListener('DOMContentLoaded', function(){
     var offcanvasEl = document.getElementById('offcanvasSidebar');
     if (offcanvasEl) {
@@ -533,6 +535,27 @@
     }
   });
 </script>
+
+<script>
+        function toggleMenu() {
+            const menu = document.getElementById('menu');
+            menu.classList.toggle('hidden');
+        }
+
+        function setActive(index) {
+            const items = document.querySelectorAll('.menu-item');
+            items.forEach((item, i) => {
+                if (i === index) {
+                    item.classList.add('active');
+                } else {
+                    item.classList.remove('active');
+                }
+            });
+            toggleMenu();
+        }    
+    </script>
+
+
 @stack('scripts')
 <script>
     // Prevent double-submits: disable the submit button and change text when a form is submitted

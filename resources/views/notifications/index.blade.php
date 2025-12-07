@@ -197,12 +197,7 @@
                 <ul class="navbar-nav ms-auto align-items-center gap-3">
                     <li class="nav-item">
                         <a class="nav-link" href="{{ route('dashboard') }}">Dashboard</a>
-                    </li>
-                    <li class="nav-item">
-                        <a class="nav-link" href="{{ route('notifications') }}">
-                            <i class="bi bi-bell"></i> Notifications
-                        </a>
-                    </li>
+                    
                     @auth
                     <li class="nav-item">
                         <form method="POST" action="{{ route('logout') }}" class="d-inline">
