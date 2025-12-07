@@ -14,7 +14,7 @@
             background: #0a1628;
         }
 
-        /* Navbar Styles (same as your profile page) */
+        /* Navbar Styles */
         .ayn-navbar {
             background: #0a1e36;
             border-bottom: 1px solid rgba(255,255,255,0.1);
@@ -165,6 +165,8 @@
             border-radius: 6px;
             transition: all 0.2s;
             cursor: pointer;
+            text-decoration: none;
+            display: inline-block;
         }
 
         .filter-tab:hover {
@@ -176,6 +178,37 @@
             background: linear-gradient(135deg, #FFD166, #FFE100);
             color: #052536;
             font-weight: 600;
+        }
+
+        .mark-read-btn {
+            background: rgba(255,255,255,0.1);
+            color: #ffffff;
+            border: none;
+            transition: all 0.2s;
+        }
+
+        .mark-read-btn:hover {
+            background: rgba(255,255,255,0.15);
+            color: #FFD166;
+        }
+
+        .empty-state {
+            text-align: center;
+            padding: 3rem 0;
+        }
+
+        .empty-state i {
+            font-size: 4rem;
+            color: rgba(255,255,255,0.2);
+        }
+
+        .empty-state h4 {
+            color: rgba(255,255,255,0.6);
+            margin-top: 1rem;
+        }
+
+        .empty-state p {
+            color: rgba(255,255,255,0.4);
         }
     </style>
 </head>
@@ -197,7 +230,15 @@
                 <ul class="navbar-nav ms-auto align-items-center gap-3">
                     <li class="nav-item">
                         <a class="nav-link" href="{{ route('dashboard') }}">Dashboard</a>
-                    
+                    </li>
+                    <li class="nav-item">
+                        <a class="nav-link" href="{{ route('notifications') }}">
+                            <i class="bi bi-bell"></i> Notifications
+                            @if(isset($unreadCount) && $unreadCount > 0)
+                                <span class="badge bg-danger rounded-pill ms-1">{{ $unreadCount }}</span>
+                            @endif
+                        </a>
+                    </li>
                     @auth
                     <li class="nav-item">
                         <form method="POST" action="{{ route('logout') }}" class="d-inline">
@@ -213,6 +254,14 @@
 
     <!-- Main Content -->
     <main class="container" style="max-width: 900px; margin-top: 2rem;">
+        <!-- Success Message -->
+        @if(session('success'))
+            <div class="alert alert-success alert-dismissible fade show" role="alert" style="background: rgba(16, 185, 129, 0.1); border: 1px solid rgba(16, 185, 129, 0.3); color: #10b981;">
+                {{ session('success') }}
+                <button type="button" class="btn-close" data-bs-dismiss="alert" aria-label="Close"></button>
+            </div>
+        @endif
+
         <!-- Page Header -->
         <div class="d-flex justify-content-between align-items-center mb-4">
             <div>
@@ -223,115 +272,59 @@
                     Stay updated with your financial activities
                 </p>
             </div>
-            <button class="btn btn-sm" style="background: rgba(255,255,255,0.1); color: #ffffff; border: none;">
-                <i class="bi bi-check-all me-2"></i>Mark all as read
-            </button>
+            @if(isset($unreadCount) && $unreadCount > 0)
+                <form method="POST" action="{{ route('notifications.markAllRead') }}" class="d-inline">
+                    @csrf
+                    <button type="submit" class="btn btn-sm mark-read-btn">
+                        <i class="bi bi-check-all me-2"></i>Mark all as read
+                    </button>
+                </form>
+            @endif
         </div>
 
         <!-- Filter Tabs -->
         <div class="filter-tabs">
-            <button class="filter-tab active">All</button>
-            <button class="filter-tab">Budget Alerts</button>
-            <button class="filter-tab">Income</button>
-            <button class="filter-tab">Expenses</button>
+            <a href="{{ route('notifications') }}?filter=all" class="filter-tab {{ $filter === 'all' ? 'active' : '' }}">
+                All
+            </a>
+            <a href="{{ route('notifications') }}?filter=income" class="filter-tab {{ $filter === 'income' ? 'active' : '' }}">
+                Income
+            </a>
+            <a href="{{ route('notifications') }}?filter=expenses" class="filter-tab {{ $filter === 'expenses' ? 'active' : '' }}">
+                Expenses
+            </a>
         </div>
 
         <!-- Notifications List -->
         <div class="notifications-list">
-            <!-- Unread Notification -->
-            <div class="notification-item unread">
-                <div class="d-flex gap-3">
-                    <div class="notification-icon warning">
-                        <i class="bi bi-exclamation-triangle-fill"></i>
-                    </div>
-                    <div style="flex: 1;">
-                        <div class="notification-title">Budget Alert: Food & Dining</div>
-                        <div class="notification-message">
-                            You've spent ₱8,500 out of ₱10,000 budget (85%). Consider reducing expenses.
+            @if(isset($notifications) && $notifications->count())
+                @foreach($notifications as $notification)
+                    <div class="notification-item {{ $notification['is_unread'] ? 'unread' : '' }}">
+                        <div class="d-flex gap-3">
+                            <div class="notification-icon {{ $notification['icon'] }}">
+                                <i class="bi {{ $notification['icon_class'] }}"></i>
+                            </div>
+                            <div style="flex: 1;">
+                                <div class="notification-title">{{ $notification['title'] }}</div>
+                                <div class="notification-message">
+                                    {{ $notification['message'] }}
+                                </div>
+                                <div class="notification-time">
+                                    <i class="bi bi-clock me-1"></i>{{ $notification['time'] }}
+                                </div>
+                            </div>
                         </div>
-                        <div class="notification-time">
-                            <i class="bi bi-clock me-1"></i>5 minutes ago
-                        </div>
                     </div>
+                @endforeach
+            @else
+                <!-- Empty State -->
+                <div class="empty-state">
+                    <i class="bi bi-bell-slash"></i>
+                    <h4>No notifications yet</h4>
+                    <p>We'll notify you when you add transactions</p>
                 </div>
-            </div>
-
-            <!-- Read Notification -->
-            <div class="notification-item">
-                <div class="d-flex gap-3">
-                    <div class="notification-icon success">
-                        <i class="bi bi-cash-coin"></i>
-                    </div>
-                    <div style="flex: 1;">
-                        <div class="notification-title">Income Received</div>
-                        <div class="notification-message">
-                            Monthly salary of ₱45,000 has been added to your account.
-                        </div>
-                        <div class="notification-time">
-                            <i class="bi bi-clock me-1"></i>2 hours ago
-                        </div>
-                    </div>
-                </div>
-            </div>
-
-            <div class="notification-item">
-                <div class="d-flex gap-3">
-                    <div class="notification-icon info">
-                        <i class="bi bi-graph-up-arrow"></i>
-                    </div>
-                    <div style="flex: 1;">
-                        <div class="notification-title">Monthly Report Ready</div>
-                        <div class="notification-message">
-                            Your November financial report is now available for review.
-                        </div>
-                        <div class="notification-time">
-                            <i class="bi bi-clock me-1"></i>1 day ago
-                        </div>
-                    </div>
-                </div>
-            </div>
-
-            <div class="notification-item">
-                <div class="d-flex gap-3">
-                    <div class="notification-icon warning">
-                        <i class="bi bi-credit-card"></i>
-                    </div>
-                    <div style="flex: 1;">
-                        <div class="notification-title">Large Expense Detected</div>
-                        <div class="notification-message">
-                            An expense of ₱12,500 was recorded in Shopping category.
-                        </div>
-                        <div class="notification-time">
-                            <i class="bi bi-clock me-1"></i>2 days ago
-                        </div>
-                    </div>
-                </div>
-            </div>
-
-            <div class="notification-item">
-                <div class="d-flex gap-3">
-                    <div class="notification-icon success">
-                        <i class="bi bi-piggy-bank"></i>
-                    </div>
-                    <div style="flex: 1;">
-                        <div class="notification-title">Savings Goal Achieved</div>
-                        <div class="notification-message">
-                            Congratulations! You've reached your monthly savings goal of ₱15,000.
-                        </div>
-                        <div class="notification-time">
-                            <i class="bi bi-clock me-1"></i>3 days ago
-                        </div>
-                    </div>
-                </div>
-            </div>
+            @endif
         </div>
-
-        <!-- Empty State (show when no notifications) -->
-        <!-- <div class="text-center py-5">
-            <i class="bi bi-bell-slash" style="font-size: 4rem; color: rgba(255,255,255,0.2);"></i>
-            <h4 style="color: rgba(255,255,255,0.6); margin-top: 1rem;">No notifications yet</h4>
-            <p style="color: rgba(255,255,255,0.4);">We'll notify you when something important happens</p>
-        </div> -->
     </main>
 
     <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/js/bootstrap.bundle.min.js"></script>
