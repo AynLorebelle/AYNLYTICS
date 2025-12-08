@@ -4,6 +4,8 @@ namespace App\Http\Controllers;
 
 use App\Models\Expense;
 use App\Models\Income;
+use App\Models\Budget;
+use App\Models\Category;
 use Illuminate\Http\Request;
 use Illuminate\Support\Carbon;
 
@@ -31,6 +33,13 @@ class NotificationController extends Controller
             ->orderByDesc('transaction_date')
             ->take(20)
             ->get();
+        
+        $rawBudget = Budget::where('user_id', $user->id)
+            ->orderByDesc('year')
+            ->orderByDesc('month')
+            ->first();
+        
+        $rawCategories = Category::where('user_id', $user->id)->get();
 
         $transactions = collect();
 
@@ -58,14 +67,40 @@ class NotificationController extends Controller
             ]);
         }
 
+        foreach($rawBudget ? [$rawBudget] : [] as $b) {
+            $transactions->push([
+                'id' => $b->id,
+                'type' => 'budget',
+                'name' => 'Budget Set',
+                'category' => null,
+                'amount' => (float) $b->amount,
+                'transaction_date' => Carbon::create($b->year, $b->month, 1),
+            ]);
+        }
+        foreach ($rawCategories as $c) {
+            $transactions->push([
+                'id' => $c->id,
+                'type' => 'category',
+                'name' => $c->name,
+                'category' => null,
+                'amount' => 0,
+                'transaction_date' => Carbon::now(),
+            ]);
+        }
+
         // Sort by most recent
         $allTransactions = $transactions->sortByDesc('transaction_date');
 
         // Apply filter
         if ($filter === 'income') {
             $allTransactions = $allTransactions->where('type', 'income');
-        } elseif ($filter === 'expenses') {
+        } elseif ($filter === 'expense') {
             $allTransactions = $allTransactions->where('type', 'expense');
+        } elseif ($filter === 'budget') {
+            $allTransactions = $allTransactions->where('type', 'budget');
+        }
+        elseif ($filter === 'category') {
+            $allTransactions = $allTransactions->where('type', 'category');
         }
 
         // Take top 20 for notifications
@@ -89,7 +124,9 @@ class NotificationController extends Controller
                     'amount' => $transaction['amount'],
                     'transaction_date' => $transaction['transaction_date']
                 ];
-            } else {
+            } 
+            
+            else if ($transaction['type'] === 'expense') {
                 // Check if it's a large expense (over ₱5,000)
                 $isLarge = $transaction['amount'] > 5000;
                 
@@ -110,6 +147,36 @@ class NotificationController extends Controller
                     'is_unread' => $date->isToday(),
                     'category' => $transaction['category'],
                     'amount' => $transaction['amount'],
+                    'transaction_date' => $transaction['transaction_date']
+                ];
+            }
+            else if ($transaction['type'] === 'budget') {
+                return [
+                    'id' => $transaction['id'],
+                    'type' => 'budget',
+                    'icon' => 'primary',
+                    'icon_class' => 'bi-pie-chart-fill',
+                    'title' => 'Budget Set',
+                    'message' => "A budget of ₱" . number_format($transaction['amount'], 2) . " has been set for " . Carbon::parse($transaction['transaction_date'])->format('F Y') . ".",
+                    'time' => $date->diffForHumans(),
+                    'is_unread' => $date->isToday(),
+                    'category' => null,
+                    'amount' => $transaction['amount'],
+                    'transaction_date' => $transaction['transaction_date']
+                ];
+            }
+            else if ($transaction['type'] === 'category') {
+                return [
+                    'id' => $transaction['id'],
+                    'type' => 'category',
+                    'icon' => 'secondary',
+                    'icon_class' => 'bi-tags-fill',
+                    'title' => 'New Category Added',
+                    'message' => "A new category '{$transaction['name']}' has been added to your categories.",
+                    'time' => $date->diffForHumans(),
+                    'is_unread' => $date->isToday(),
+                    'category' => null,
+                    'amount' => 0,
                     'transaction_date' => $transaction['transaction_date']
                 ];
             }

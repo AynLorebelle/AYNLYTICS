@@ -231,14 +231,6 @@
                     <li class="nav-item">
                         <a class="nav-link" href="{{ route('dashboard') }}">Dashboard</a>
                     </li>
-                    <li class="nav-item">
-                        <a class="nav-link" href="{{ route('notifications') }}">
-                            <i class="bi bi-bell"></i> Notifications
-                            @if(isset($unreadCount) && $unreadCount > 0)
-                                <span class="badge bg-danger rounded-pill ms-1">{{ $unreadCount }}</span>
-                            @endif
-                        </a>
-                    </li>
                     @auth
                     <li class="nav-item">
                         <form method="POST" action="{{ route('logout') }}" class="d-inline">
@@ -292,6 +284,12 @@
             </a>
             <a href="{{ route('notifications') }}?filter=expenses" class="filter-tab {{ $filter === 'expenses' ? 'active' : '' }}">
                 Expenses
+            </a>
+            <a href="{{ route('notifications') }}?filter=budget" class="filter-tab {{ $filter === 'budget' ? 'active' : '' }}">
+                Budget
+            </a>
+            <a href="{{ route('notifications') }}?filter=category" class="filter-tab {{ $filter === 'category' ? 'active' : '' }}">
+                Category
             </a>
         </div>
 
