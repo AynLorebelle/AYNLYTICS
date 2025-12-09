@@ -499,6 +499,14 @@
         </svg>
         <span>Income</span>
     </a>
+
+    <a class = "nav-link menu-item" href="{{ route('logout') }}" onclick="setActive(6)">
+        @csrf
+        <svg class="icon" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 12l2 2 4-4m6 2a9 9 0 11-18 0 9 9 0 0118 0z"/>
+    </svg>
+        <span> Logout </span>
+    </a>
     
             </nav>
         </div>
@@ -516,7 +524,7 @@
 <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/js/bootstrap.bundle.min.js"></script>
 <script src="https://cdn.jsdelivr.net/npm/chart.js@4.4.0/dist/chart.umd.min.js"></script>
 <script>
-    
+
     function toggleMenu() {
       const menu = document.getElementById('menu');
       if (!menu) return;
