@@ -85,6 +85,16 @@ class DashboardController extends Controller
             $savingsChange = ['label' => round($diff, 1), 'value' => $diff, 'direction' => $diff > 0 ? 'positive' : ($diff < 0 ? 'negative' : 'neutral')];
         }
 
+        // ===== CALCULATE UNREAD COUNT =====
+        // Count transactions from today
+        $unreadCount = Expense::where('user_id', $user->id)
+            ->whereDate('created_at', Carbon::today())
+            ->count() 
+            + Income::where('user_id', $user->id)
+            ->whereDate('created_at', Carbon::today())
+            ->count();
+        // ===================================
+
         // Recent transactions (merge of incomes & expenses), get last 20 from each then sort, take 10
         $rawExpenses = Expense::where('user_id', $user->id)->with('category')->orderByDesc('transaction_date')->take(20)->get();
         $rawIncomes = Income::where('user_id', $user->id)->with('category')->orderByDesc('transaction_date')->take(20)->get();
@@ -116,12 +126,12 @@ class DashboardController extends Controller
         // sort and take 10 (most recent first)
         $recentTransactions = $transactions->sortByDesc('transaction_date')->slice(0, 10)->values();
 
-        // ADD remainingBudget to the view data
+        // ADD remainingBudget and unreadCount to the view data
         return view('dashboard', compact(
             'totalExpenses', 'totalIncomes', 'totalBudgets', 'remainingBudget',
             'prevExpenses', 'prevIncomes', 'prevBudgets',
             'budgetChange', 'incomeChange', 'expenseChange', 'savingsPercent', 'savingsChange',
-            'recentTransactions'
+            'recentTransactions', 'unreadCount'
         ));
     }
 
