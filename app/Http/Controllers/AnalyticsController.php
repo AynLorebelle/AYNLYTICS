@@ -56,11 +56,13 @@ class AnalyticsController extends Controller
         // Totals between the date range (inclusive)
         $totalIncome = (float) DB::table('incomes')
             ->where('user_id', $user->id)
+            ->whereNull('deleted_at')
             ->whereBetween('transaction_date', [$rangeStart->toDateString(), $rangeEnd->toDateString()])
             ->sum('amount');
 
         $totalExpenses = (float) DB::table('expenses')
             ->where('user_id', $user->id)
+            ->whereNull('deleted_at')
             ->whereBetween('transaction_date', [$rangeStart->toDateString(), $rangeEnd->toDateString()])
             ->sum('amount');
 
@@ -99,6 +101,7 @@ class AnalyticsController extends Controller
             ->join('categories', 'expenses.category_id', '=', 'categories.id')
             ->select('categories.name as category', DB::raw('SUM(expenses.amount) as total'))
             ->where('expenses.user_id', $userId)
+            ->whereNull('expenses.deleted_at')
             ->whereBetween('expenses.transaction_date', [$start->toDateString(), $end->toDateString()])
             ->groupBy('categories.name')
             ->get();
@@ -124,12 +127,14 @@ class AnalyticsController extends Controller
 
             $inc = DB::table('incomes')
                 ->where('user_id', $userId)
+                ->whereNull('deleted_at')
                 ->whereMonth('transaction_date', $m)
                 ->whereYear('transaction_date', $y)
                 ->sum('amount');
 
             $exp = DB::table('expenses')
                 ->where('user_id', $userId)
+                ->whereNull('deleted_at')
                 ->whereMonth('transaction_date', $m)
                 ->whereYear('transaction_date', $y)
                 ->sum('amount');
@@ -156,6 +161,7 @@ protected function getBudgetPerformance($userId, Carbon $start, Carbon $end)
         ->leftJoin('expenses', function ($join) use ($month, $year, $userId) {
             $join->on('expenses.category_id', '=', 'budgets.category_id')
                  ->where('expenses.user_id', $userId)
+                 ->whereNull('expenses.deleted_at')
                  ->whereMonth('expenses.transaction_date', $month)
                  ->whereYear('expenses.transaction_date', $year);
         })
@@ -206,6 +212,7 @@ protected function getBudgetPerformance($userId, Carbon $start, Carbon $end)
         $expRows = DB::table('expenses')
             ->select(DB::raw('DAY(transaction_date) as day'), DB::raw('SUM(amount) as total'))
             ->where('user_id', $userId)
+            ->whereNull('deleted_at')
             ->whereYear('transaction_date', $year)
             ->whereMonth('transaction_date', $month)
             ->groupByRaw('DAY(transaction_date)')
@@ -221,6 +228,7 @@ protected function getBudgetPerformance($userId, Carbon $start, Carbon $end)
         $incRows = DB::table('incomes')
             ->select(DB::raw('DAY(transaction_date) as day'), DB::raw('SUM(amount) as total'))
             ->where('user_id', $userId)
+            ->whereNull('deleted_at')
             ->whereYear('transaction_date', $year)
             ->whereMonth('transaction_date', $month)
             ->groupByRaw('DAY(transaction_date)')
