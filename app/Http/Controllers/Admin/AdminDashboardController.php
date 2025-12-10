@@ -41,5 +41,15 @@ class AdminDashboardController extends Controller
             'recentUsers',
             'activeUsers'
         ));
+        
     }
+    public function users()
+    {
+        $users = User::paginate(20);
+        return view('admin.users.index', compact('users'));
+    }  
+    public function editUser(User $user)
+    {
+        return view('admin.users.edit', compact('user'));
+    }     
 }

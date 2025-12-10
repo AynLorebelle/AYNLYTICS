@@ -36,6 +36,7 @@ class AdminRegisterController extends Controller
             'email' => $request->email,
             'password' => Hash::make($request->password),
             'role' => 'admin', // ← This is the key difference
+            'email_verified_at' => now(), // Auto-verify admin users
         ]);
 
         event(new Registered($user));

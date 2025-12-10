@@ -1,22 +1,31 @@
-@extends('layouts.app')
-
-@section('title','Users')
-
+@extends ('layouts.app')
+@section('title', 'Users')
 @section('content')
-  <h3>Users</h3>
-  <div class="card">
-    <div class="card-body dark-card">
-      <table class="table">
-        <thead><tr><th>Name</th><th>Email</th><th>Role</th><th></th></tr></thead>
+  <h3 class="mb-3">Users</h3>
+  <div class="card dark-card">
+    <div class="card-body">
+      <table class="table table-striped table-dark">
+        <thead>
+          <tr>
+            <th>Name</th>
+            <th>Email</th>
+            <th>Role</th>
+            <th></th>
+          </tr>
+        </thead>
         <tbody>
-          @foreach($users as $u)
+          @foreach($users as $user)
             <tr>
-              <td>{{ $u->name }}</td>
-              <td>{{ $u->email }}</td>
-              <td>{{ $u->role }}</td>
+              <td>{{ $user->name }}</td>
+              <td>{{ $user->email }}</td>
+              <td>{{ $user->role }}</td>
               <td class="text-end">
-                <a href="{{ route('admin.users.edit',$u) }}" class="btn btn-sm btn-outline-primary">Edit</a>
-                <form action="{{ route('admin.users.destroy',$u) }}" method="POST" style="display:inline">@csrf @method('DELETE')<button class="btn btn-sm btn-outline-danger" onclick="return confirm('Delete user?')">Delete</button></form>
+                <div class="action-btns">
+                  <a href="" class="btn btn-sm btn-outline-primary"><i class="bi bi-pencil"></i></a>
+                  <form action="" method="POST" style="display:inline">@csrf @method('DELETE')
+                    <button class="btn btn-sm btn-outline-danger" onclick="return confirm('Delete user?')"><i class="bi bi-trash"></i></button>
+                  </form>
+                </div>
               </td>
             </tr>
           @endforeach

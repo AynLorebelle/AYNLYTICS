@@ -14,6 +14,7 @@ use Illuminate\Support\Facades\Auth;
 use App\Http\Controllers\AnalyticsController;
 use App\Http\Controllers\NotificationController;
 use App\Http\Controllers\Auth\AdminRegisterController;
+use App\Http\Controllers\Admin\AdminDashboardController;
 
 Route::get('/', function () {
     return view('welcome');
@@ -52,20 +53,15 @@ Route::middleware('auth')->group(function () {
     // Notifications
     Route::get('/notifications', [NotificationController::class, 'index'])->name('notifications');
     Route::post('/notifications/mark-all-read', [NotificationController::class, 'markAllRead'])->name('notifications.markAllRead');
-    Route::post('/notifications/{id}/mark-read', [NotificationController::class, 'markRead'])->name('notifications.markRead');
-    Route::post('/notifications/{id}/mark-unread', [NotificationController::class, 'markUnread'])->name('notifications.markUnread');
-    Route::get('/notifications/unread-count', [NotificationController::class, 'getUnreadCount'])->name('notifications.unreadCount');
-    
-    // Admin area (controller enforces admin)
-    Route::middleware('admin')->group(function () {
-    Route::get('/admin/dashboard', [App\Http\Controllers\Admin\AdminDashboardController::class, 'index'])->name('admin.dashboard');
-});
-    Route::prefix('admin')->name('admin.')->middleware('can:admin')->group(function () {
-        Route::get('users', [AdminController::class, 'index'])->name('users.index');
-        Route::get('users/{user}/edit', [AdminController::class, 'edit'])->name('users.edit');
-        Route::patch('users/{user}', [AdminController::class, 'update'])->name('users.update');
-        Route::delete('users/{user}', [AdminController::class, 'destroy'])->name('users.destroy');
+
+    // Admin routes - ONLY check can:admin, auth is already applied by parent group
+    Route::middleware('can:admin')->group(function () {
+        Route::get('admin', [AdminController::class, 'index'])->name('admin.index');
+        Route::get('admin/dashboard', [AdminDashboardController::class, 'index'])->name('admin.dashboard');
+        Route::get('admin/users', [AdminDashboardController::class, 'users'])->name('admin.users');
+        Route::get('admin/users/{user}/edit', [AdminDashboardController::class, 'editUser'])->name('admin.users.edit');
     });
+    
 });
 
 require __DIR__.'/auth.php';

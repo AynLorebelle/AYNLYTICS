@@ -2,13 +2,14 @@
 
 namespace App\Providers;
 
- use App\Models\Expense;
- use App\Models\Income;
- use App\Models\Budget;
- use App\Models\Category;
- use App\Policies\ExpensePolicy;
- use App\Policies\IncomePolicy;
- use App\Policies\BudgetPolicy;
+use App\Models\User;
+use App\Models\Expense;
+use App\Models\Income;
+use App\Models\Budget;
+use App\Models\Category;
+use App\Policies\ExpensePolicy;
+use App\Policies\IncomePolicy;
+use App\Policies\BudgetPolicy;
 use Illuminate\Foundation\Support\Providers\AuthServiceProvider as ServiceProvider;
 use Illuminate\Support\Facades\Gate;
 
@@ -33,6 +34,8 @@ class AuthServiceProvider extends ServiceProvider
     {
         $this->registerPolicies();
 
-        Gate::define('admin', fn($user) => $user->isAdmin());
+        Gate::define('admin', function (User $user) {
+            return $user->isAdmin();
+        });
     }
 }

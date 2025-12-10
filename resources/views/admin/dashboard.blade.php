@@ -273,7 +273,7 @@
                         </a>
                     </li>
                     <li class="nav-item">
-                        <a class="nav-link" href="{{ route('admin.users.index') }}">
+                        <a class="nav-link" href="{{ route('admin.users') }}">
                             <i class="bi bi-people"></i> Manage Users
                         </a>
                     </li>
