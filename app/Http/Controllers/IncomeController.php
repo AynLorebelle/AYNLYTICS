@@ -5,7 +5,9 @@ namespace App\Http\Controllers;
 use App\Http\Requests\IncomeRequest;
 use App\Models\Category;
 use App\Models\Income;
+use App\Models\Expense;
 use Illuminate\Http\Request;
+use Illuminate\Support\Carbon;
 
 class IncomeController extends Controller
 {
@@ -18,7 +20,8 @@ class IncomeController extends Controller
     {
         $user = $request->user();
         $incomes = Income::with('category')->where('user_id', $user->id)->latest()->paginate(20);
-        return view('incomes.index', compact('incomes'));
+        $unreadCount = Expense::where('user_id', $user->id)->whereDate('created_at', Carbon::today())->count() + Income::where('user_id', $user->id)->whereDate('created_at', Carbon::today())->count();
+        return view('incomes.index', compact('incomes', 'unreadCount'));
     }
 
     public function create()

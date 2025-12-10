@@ -675,13 +675,26 @@
         }
 
         // Notification handling
+        let notificationClicked = false;
         document.getElementById('notificationButton').addEventListener('click', function(e) {
-            // Badge will automatically become 0 when visiting notifications page
-            // because NotificationController returns unreadCount = 0
+            // Clear badge when clicking notification button
+            const badge = document.getElementById('notificationBadge');
+            if (badge) {
+                badge.style.display = 'none';
+                badge.textContent = '0';
+            }
+            localStorage.removeItem('notificationCount');
+            notificationClicked = true;
+            // Reset flag after 100ms to allow new transactions to show badge
+            setTimeout(() => { notificationClicked = false; }, 100);
         });
 
-        // Auto-refresh notification count every 30 seconds
+        // Auto-refresh notification count every 3 seconds
         async function refreshNotificationCount() {
+            // Don't refresh if user just clicked notification button
+            if (notificationClicked) {
+                return;
+            }
             try {
                 const response = await fetch('/notifications/unread-count');
                 const data = await response.json();
@@ -691,8 +704,18 @@
                     if (data.count > 0) {
                         badge.textContent = data.count;
                         badge.style.display = 'block';
+                        localStorage.setItem('notificationCount', data.count);
                     } else {
-                        badge.style.display = 'none';
+                        const savedCount = localStorage.getItem('notificationCount');
+                        if (window.location.pathname.includes('/notifications')) {
+                            badge.style.display = 'none';
+                            localStorage.removeItem('notificationCount');
+                        } else if (savedCount && parseInt(savedCount) > 0) {
+                            badge.textContent = savedCount;
+                            badge.style.display = 'block';
+                        } else {
+                            badge.style.display = 'none';
+                        }
                     }
                 }
             } catch (error) {
@@ -700,8 +723,20 @@
             }
         }
 
-        // Refresh every 30 seconds
-        setInterval(refreshNotificationCount, 30000);
+        // Initialize from localStorage on page load
+        function initNotificationBadge() {
+            const savedCount = localStorage.getItem('notificationCount');
+            const badge = document.getElementById('notificationBadge');
+            if (savedCount && parseInt(savedCount) > 0 && badge) {
+                badge.textContent = savedCount;
+                badge.style.display = 'block';
+            }
+        }
+        initNotificationBadge();
+
+        // Refresh every 3 seconds for real-time updates
+        setInterval(refreshNotificationCount, 3000);
+        refreshNotificationCount();
 
         // Helper functions
         function fmt(amount) {

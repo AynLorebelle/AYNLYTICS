@@ -4,7 +4,10 @@ namespace App\Http\Controllers;
 
 use App\Http\Requests\CategoryRequest;
 use App\Models\Category;
+use App\Models\Expense;
+use App\Models\Income;
 use Illuminate\Http\Request;
+use Illuminate\Support\Carbon;
 
 class CategoryController extends Controller
 {
@@ -19,8 +22,8 @@ class CategoryController extends Controller
         $categories = Category::where(function ($q) use ($user) {
             $q->where('is_system', true)->orWhere('user_id', $user->id);
         })->orderBy('type')->orderBy('name')->paginate(50);
-
-        return view('categories.index', compact('categories'));
+        $unreadCount = Expense::where('user_id', $user->id)->whereDate('created_at', Carbon::today())->count() + Income::where('user_id', $user->id)->whereDate('created_at', Carbon::today())->count();
+        return view('categories.index', compact('categories', 'unreadCount'));
     }
 
     public function create()
