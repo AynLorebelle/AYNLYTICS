@@ -8,7 +8,7 @@
   </div>
   <div class="card dark-card">
     <div class="card-body">
-      <form action="" method="POST">
+      <form action="{{ route('admin.users.update', $user) }}" method="POST">
         @csrf
         @method('PUT')
         <div class="mb-3">

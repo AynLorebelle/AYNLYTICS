@@ -21,11 +21,8 @@
               <td>{{ $user->role }}</td>
               <td class="text-end">
                 <div class="action-btns">
-                  <a href="" class="btn btn-sm btn-outline-primary"><i class="bi bi-pencil"></i></a>
-                  <form action="" method="POST" style="display:inline">@csrf @method('DELETE')
-                    <button class="btn btn-sm btn-outline-danger" onclick="return confirm('Delete user?')"><i class="bi bi-trash"></i></button>
-                  </form>
-                </div>
+                  <a href="{{ route('admin.users.edit', $user) }}" class="btn btn-sm btn-outline-primary"><i class="bi bi-pencil"></i></a>
+            
               </td>
             </tr>
           @endforeach

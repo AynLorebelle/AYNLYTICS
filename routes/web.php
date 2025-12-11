@@ -60,6 +60,9 @@ Route::middleware('auth')->group(function () {
         Route::get('admin/dashboard', [AdminDashboardController::class, 'index'])->name('admin.dashboard');
         Route::get('admin/users', [AdminDashboardController::class, 'users'])->name('admin.users');
         Route::get('admin/users/{user}/edit', [AdminDashboardController::class, 'editUser'])->name('admin.users.edit');
+        Route::put('admin/users/{user}', [AdminDashboardController::class, 'updateUser'])->name('admin.users.update');
+        Route::delete('admin/users/{user}', [AdminDashboardController::class, 'deleteUser'])->name('admin.users.delete');
+        
     });
     
 });

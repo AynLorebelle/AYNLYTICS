@@ -423,7 +423,7 @@
                 </path>
             </svg>
             <!-- Optional: Notification badge -->
-            <span id="notificationBadge" class="notification-badge" style="{{ isset($unreadCount) && $unreadCount > 0 ? 'display: block;' : 'display: none;' }}">{{ $unreadCount ?? 0 }}</span>
+            <span id="notificationBadge" class="notification-badge" style="display: none;">0</span>
         </button>
     </a>
 
@@ -572,26 +572,13 @@
         }
 
         // Notification handling
-        let notificationClicked = false;
         document.getElementById('notificationButton').addEventListener('click', function(e) {
-            // Clear badge when clicking notification button
-            const badge = document.getElementById('notificationBadge');
-            if (badge) {
-                badge.style.display = 'none';
-                badge.textContent = '0';
-            }
-            localStorage.removeItem('notificationCount');
-            notificationClicked = true;
-            // Reset flag after 100ms to allow new transactions to show badge
-            setTimeout(() => { notificationClicked = false; }, 100);
+            // Badge will automatically become 0 when visiting notifications page
+            // because NotificationController returns unreadCount = 0
         });
 
-        // Auto-refresh notification count every 3 seconds
+        // Auto-refresh notification count every 30 seconds
         async function refreshNotificationCount() {
-            // Don't refresh if user just clicked notification button
-            if (notificationClicked) {
-                return;
-            }
             try {
                 const response = await fetch('/notifications/unread-count');
                 const data = await response.json();
@@ -601,18 +588,8 @@
                     if (data.count > 0) {
                         badge.textContent = data.count;
                         badge.style.display = 'block';
-                        localStorage.setItem('notificationCount', data.count);
                     } else {
-                        const savedCount = localStorage.getItem('notificationCount');
-                        if (window.location.pathname.includes('/notifications')) {
-                            badge.style.display = 'none';
-                            localStorage.removeItem('notificationCount');
-                        } else if (savedCount && parseInt(savedCount) > 0) {
-                            badge.textContent = savedCount;
-                            badge.style.display = 'block';
-                        } else {
-                            badge.style.display = 'none';
-                        }
+                        badge.style.display = 'none';
                     }
                 }
             } catch (error) {
@@ -620,20 +597,8 @@
             }
         }
 
-        // Initialize from localStorage on page load
-        function initNotificationBadge() {
-            const savedCount = localStorage.getItem('notificationCount');
-            const badge = document.getElementById('notificationBadge');
-            if (savedCount && parseInt(savedCount) > 0 && badge) {
-                badge.textContent = savedCount;
-                badge.style.display = 'block';
-            }
-        }
-        initNotificationBadge();
-
-        // Refresh every 3 seconds
-        setInterval(refreshNotificationCount, 3000);
-        refreshNotificationCount();
+        // Refresh every 30 seconds
+        setInterval(refreshNotificationCount, 30000);
 
         // Helper functions
         function fmt(amount) {
