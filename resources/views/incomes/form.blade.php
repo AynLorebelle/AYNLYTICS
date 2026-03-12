@@ -6,6 +6,9 @@
     @foreach($categories as $c)
       <option value="{{ $c->id }}" {{ (old('category_id',$income->category_id ?? '') == $c->id) ? 'selected' : '' }}>{{ $c->name }}</option>
     @endforeach
+    @if($categories->isEmpty())
+      <option value="" disabled>No categories available</option>
+    @endif
   </select>
   @error('category_id')<div class="text-danger small mt-1">{{ $message }}</div>@enderror
 </div>

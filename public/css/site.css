@@ -154,6 +154,16 @@ section.col-md-9 {
   margin-right: -1260px ;
 }
 
+.ayn-cta2{
+  background: transparent;
+  color: #ffffffff;
+  border: 2px solid #87CEEB;
+  margin-top: 14px;
+  margin-bottom:auto;
+  margin-right: -1260px ;
+  margin-left: 25px ;
+}
+
 .ayn-cta:hover{ 
   color: #FFE100;
   background: rgba(135, 206, 235, 0.15);

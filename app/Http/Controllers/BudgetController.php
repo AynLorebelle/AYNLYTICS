@@ -5,7 +5,10 @@ namespace App\Http\Controllers;
 use App\Http\Requests\BudgetRequest;
 use App\Models\Budget;
 use App\Models\Category;
+use App\Models\Expense;
+use App\Models\Income;
 use Illuminate\Http\Request;
+use Illuminate\Support\Carbon;
 
 class BudgetController extends Controller
 {
@@ -18,7 +21,8 @@ class BudgetController extends Controller
     {
         $user = $request->user();
         $budgets = Budget::with('category')->where('user_id', $user->id)->orderBy('year', 'desc')->orderBy('month', 'desc')->paginate(50);
-        return view('budgets.index', compact('budgets'));
+        $unreadCount = Expense::where('user_id', $user->id)->whereDate('created_at', Carbon::today())->count() + Income::where('user_id', $user->id)->whereDate('created_at', Carbon::today())->count();
+        return view('budgets.index', compact('budgets', 'unreadCount'));
     }
 
     public function create()

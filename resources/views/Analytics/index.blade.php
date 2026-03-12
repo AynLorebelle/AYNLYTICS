@@ -197,6 +197,167 @@
         0% { transform: rotate(0deg); }
         100% { transform: rotate(360deg); }
     }
+
+    /* Month picker modal */
+    .period-modal {
+        display: none;
+        position: fixed;
+        z-index: 1000;
+        left: 0;
+        top: 0;
+        width: 100%;
+        height: 100%;
+        background-color: rgba(0, 0, 0, 0.7);
+        align-items: center;
+        justify-content: center;
+    }
+
+    .period-modal.show {
+        display: flex;
+    }
+
+    .period-modal-content {
+        background-color: #1f2937;
+        border: 1px solid #374151;
+        border-radius: 1rem;
+        padding: 2rem;
+        width: 90%;
+        max-width: 500px;
+        position: relative;
+    }
+
+    .period-modal-header {
+        display: flex;
+        justify-content: space-between;
+        align-items: center;
+        margin-bottom: 1.5rem;
+    }
+
+    .period-modal-title {
+        font-size: 1.25rem;
+        font-weight: 600;
+        color: #fff;
+        margin: 0;
+    }
+
+    .period-modal-close {
+        background: none;
+        border: none;
+        color: #9ca3af;
+        font-size: 1.5rem;
+        cursor: pointer;
+        padding: 0;
+        width: 30px;
+        height: 30px;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        border-radius: 0.375rem;
+        transition: background-color 0.2s;
+    }
+
+    .period-modal-close:hover {
+        background-color: #374151;
+    }
+
+    .period-selector {
+        display: grid;
+        gap: 1rem;
+    }
+
+    .period-row {
+        display: grid;
+        grid-template-columns: 1fr 1fr;
+        gap: 1rem;
+    }
+
+    .form-group label {
+        display: block;
+        color: #9ca3af;
+        font-size: 0.875rem;
+        margin-bottom: 0.5rem;
+        font-weight: 500;
+    }
+
+    .form-control-custom {
+        width: 100%;
+        padding: 0.75rem;
+        background-color: #111827;
+        border: 1px solid #374151;
+        border-radius: 0.5rem;
+        color: #fff;
+        font-size: 0.875rem;
+        transition: border-color 0.2s;
+    }
+
+    .form-control-custom:focus {
+        outline: none;
+        border-color: #3b82f6;
+    }
+
+    .period-actions {
+        display: flex;
+        gap: 0.75rem;
+        margin-top: 1.5rem;
+    }
+
+    .btn-apply {
+        flex: 1;
+        padding: 0.75rem;
+        background-color: #3b82f6;
+        color: #fff;
+        border: none;
+        border-radius: 0.5rem;
+        font-weight: 500;
+        cursor: pointer;
+        transition: background-color 0.2s;
+    }
+
+    .btn-apply:hover {
+        background-color: #2563eb;
+    }
+
+    .btn-cancel {
+        flex: 1;
+        padding: 0.75rem;
+        background-color: transparent;
+        color: #9ca3af;
+        border: 1px solid #374151;
+        border-radius: 0.5rem;
+        font-weight: 500;
+        cursor: pointer;
+        transition: all 0.2s;
+    }
+
+    .btn-cancel:hover {
+        background-color: #374151;
+        color: #fff;
+    }
+
+    .quick-select {
+        display: flex;
+        gap: 0.5rem;
+        margin-bottom: 1rem;
+        flex-wrap: wrap;
+    }
+
+    .quick-select-btn {
+        padding: 0.5rem 1rem;
+        background-color: #111827;
+        color: #9ca3af;
+        border: 1px solid #374151;
+        border-radius: 0.5rem;
+        font-size: 0.875rem;
+        cursor: pointer;
+        transition: all 0.2s;
+    }
+
+    .quick-select-btn:hover,
+    .quick-select-btn.active {
+        background-color: #3b82f6;
+        color: #fff;
+        border-color: #3b82f6;
+    }
 </style>
 @endpush
 
@@ -210,7 +371,7 @@
                 <p class="text-light mb-0">Financial insights for <span id="currentDate"></span></p>
             </div>
             <div class="d-flex gap-2">
-                <button class="btn btn-outline-light btn-sm">
+                <button class="btn btn-outline-light btn-sm" onclick="openPeriodModal()">
                     <i class="bi bi-calendar-range me-2"></i>Change Period
                 </button>
                 <div class="export-dropdown">
@@ -295,7 +456,7 @@
                         </div>
                     </div>
                     <div class="progress mt-2" style="height: 6px; background-color: #1f2937;">
-                        <div class="progress-bar {{ ($budgetUsagePercent ?? 0) > 100 ? 'bg-danger' : 'bg-warning' }}" role="progressbar" style="width: {{ min($budgetUsagePercent ?? 0, 100) }}%"></div>
+                        <div class="progress-bar bg-warning" role="progressbar" style="width: {{ $budgetUsagePercent ?? 0 }}%;" aria-valuenow="{{ $budgetUsagePercent ?? 0 }}" aria-valuemin="0" aria-valuemax="100"></div>
                     </div>
                 </div>
             </div>
@@ -309,7 +470,7 @@
                     <div class="ui-card-header">
                         <div class="d-flex justify-content-between align-items-center">
                             <h5 class="title mb-0">Expenses by Category</h5>
-                            <span class="badge-month">{{ now()->format('M Y') }}</span>
+                            <span class="badge-month">{{ $periodLabel ?? now()->format('M Y') }}</span>
                         </div>
                     </div>
                     <div class="ui-card-body">
@@ -343,7 +504,7 @@
                     <div class="ui-card-header">
                         <div class="d-flex justify-content-between align-items-center">
                             <h5 class="title mb-0">Budget Performance</h5>
-                            <span class="badge-month">{{ now()->format('M Y') }}</span>
+                            <span class="badge-month">{{ $periodLabel ?? now()->format('M Y') }}</span>
                         </div>
                     </div>
                     <div class="ui-card-body">
@@ -360,7 +521,7 @@
                     <div class="ui-card-header">
                         <div class="d-flex justify-content-between align-items-center">
                             <h5 class="title mb-0">Daily Net Flow</h5>
-                            <span class="badge-month">{{ now()->format('M Y') }}</span>
+                            <span class="badge-month">{{ $periodLabel ?? now()->format('M Y') }}</span>
                         </div>
                     </div>
                     <div class="ui-card-body">
@@ -370,6 +531,42 @@
                     </div>
                 </div>
             </div>
+        </div>
+    </div>
+</div>
+
+<!-- Period Selection Modal -->
+<div class="period-modal" id="periodModal">
+    <div class="period-modal-content">
+        <div class="period-modal-header">
+            <h3 class="period-modal-title">Select Period</h3>
+            <button class="period-modal-close" onclick="closePeriodModal()">&times;</button>
+        </div>
+        
+        <div class="quick-select">
+            <button class="quick-select-btn" onclick="selectQuickPeriod('current', this)">This Month</button>
+            <button class="quick-select-btn" onclick="selectQuickPeriod('last', this)">Last Month</button>
+            <button class="quick-select-btn" onclick="selectQuickPeriod('last3', this)">Last 3 Months</button>
+            <button class="quick-select-btn" onclick="selectQuickPeriod('last6', this)">Last 6 Months</button>
+            <button class="quick-select-btn" onclick="selectQuickPeriod('last12', this)">Last 12 Months</button>
+        </div>
+
+        <div class="period-selector">
+            <div class="period-row">
+                <div class="form-group">
+                    <label>From Month</label>
+                    <input type="month" id="fromMonth" class="form-control-custom" value="{{ $fromMonth ?? '' }}">
+                </div>
+                <div class="form-group">
+                    <label>To Month</label>
+                    <input type="month" id="toMonth" class="form-control-custom" value="{{ $toMonth ?? '' }}">
+                </div>
+            </div>
+        </div>
+
+        <div class="period-actions">
+            <button class="btn-cancel" onclick="closePeriodModal()">Cancel</button>
+            <button class="btn-apply" onclick="applyPeriodFilter()">Apply Filter</button>
         </div>
     </div>
 </div>
@@ -391,6 +588,7 @@
     let chartInstances = {};
 
     (function(){
+        // Server-side JSON -> JS objects
         const expensesByCategory = @json($expensesByCategory ?? ['labels' => [], 'data' => []]);
         const trend = @json($trend ?? ['labels' => [], 'income' => [], 'expenses' => []]);
         const budgetPerf = @json($budgetPerf ?? ['labels' => [], 'budgets' => [], 'spent' => []]);
@@ -399,8 +597,7 @@
         // Chart defaults for dark theme
         Chart.defaults.font.family = '-apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, "Helvetica Neue", Arial, sans-serif';
         Chart.defaults.color = '#9ca3af';
-        
-        // Modern color palette
+
         const colors = {
             primary: '#3b82f6',
             success: '#10b981',
@@ -413,258 +610,361 @@
         };
 
         const categoryColors = [
-            colors.primary, colors.success, colors.info, 
-            colors.warning, colors.danger, colors.purple, 
+            colors.primary, colors.success, colors.info,
+            colors.warning, colors.danger, colors.purple,
             colors.pink, colors.gray
         ];
 
-        // Expenses by category - Doughnut
-        const ctx1 = document.getElementById('chart-expenses-by-category').getContext('2d');
-        chartInstances.expensesByCategory = new Chart(ctx1, {
-            type: 'doughnut',
-            data: {
-                labels: expensesByCategory.labels || [],
-                datasets: [{
-                    data: expensesByCategory.data || [],
-                    backgroundColor: categoryColors,
-                    borderWidth: 2,
-                    borderColor: '#0f1724'
-                }]
-            },
-            options: {
-                responsive: true,
-                maintainAspectRatio: false,
-                plugins: {
-                    legend: {
-                        position: 'bottom',
-                        labels: {
-                            padding: 15,
-                            usePointStyle: true,
-                            font: { size: 11 },
-                            color: '#9ca3af'
-                        }
-                    },
-                    tooltip: {
-                        backgroundColor: '#1f2937',
-                        titleColor: '#fff',
-                        bodyColor: '#9ca3af',
-                        borderColor: '#374151',
-                        borderWidth: 1,
-                        callbacks: {
-                            label: function(context) {
-                                const label = context.label || '';
-                                const value = context.parsed || 0;
-                                const total = context.dataset.data.reduce((a, b) => a + b, 0);
-                                const percentage = total ? ((value / total) * 100).toFixed(1) : 0;
-                                return `${label}: ₱${value.toLocaleString()} (${percentage}%)`;
+        // Helper: create repeated color array matching length
+        function getColorsForCount(count) {
+            const palette = [];
+            for (let i = 0; i < count; i++) {
+                palette.push(categoryColors[i % categoryColors.length]);
+            }
+            return palette;
+        }
+
+        // ---------- Expenses by category (doughnut) ----------
+        try {
+            const ctx1 = document.getElementById('chart-expenses-by-category').getContext('2d');
+            const bgColors = getColorsForCount((expensesByCategory.data || []).length);
+            chartInstances.expensesByCategory = new Chart(ctx1, {
+                type: 'doughnut',
+                data: {
+                    labels: expensesByCategory.labels || [],
+                    datasets: [{
+                        data: expensesByCategory.data || [],
+                        backgroundColor: bgColors,
+                        borderWidth: 2,
+                        borderColor: '#0f1724'
+                    }]
+                },
+                options: {
+                    responsive: true,
+                    maintainAspectRatio: false,
+                    plugins: {
+                        legend: {
+                            position: 'bottom',
+                            labels: {
+                                padding: 15,
+                                usePointStyle: true,
+                                font: { size: 11 },
+                                color: '#9ca3af'
+                            }
+                        },
+                        tooltip: {
+                            backgroundColor: '#1f2937',
+                            titleColor: '#fff',
+                            bodyColor: '#9ca3af',
+                            borderColor: '#374151',
+                            borderWidth: 1,
+                            callbacks: {
+                                label: function(context) {
+                                    const label = context.label || '';
+                                    const value = context.parsed || 0;
+                                    const total = context.dataset.data.reduce((a, b) => a + b, 0);
+                                    const percentage = total ? ((value / total) * 100).toFixed(1) : 0;
+                                    return `${label}: ₱${Number(value).toLocaleString()} (${percentage}%)`;
+                                }
                             }
                         }
                     }
                 }
-            }
-        });
+            });
+        } catch (e) {
+            console.error('Failed to init expensesByCategory chart', e);
+        }
 
-        // Income vs Expenses trend - Line
-        const ctx2 = document.getElementById('chart-income-vs-expenses').getContext('2d');
-        chartInstances.incomeVsExpenses = new Chart(ctx2, {
-            type: 'line',
-            data: {
-                labels: trend.labels || [],
-                datasets: [
-                    { 
-                        label: 'Income', 
-                        data: trend.income || [], 
-                        borderColor: colors.success,
-                        backgroundColor: colors.success + '20',
+        // ---------- Income vs Expenses (line) ----------
+        try {
+            const ctx2 = document.getElementById('chart-income-vs-expenses').getContext('2d');
+            chartInstances.incomeVsExpenses = new Chart(ctx2, {
+                type: 'line',
+                data: {
+                    labels: trend.labels || [],
+                    datasets: [
+                        {
+                            label: 'Income',
+                            data: trend.income || [],
+                            borderColor: colors.success,
+                            backgroundColor: colors.success + '20',
+                            fill: true,
+                            tension: 0.4,
+                            borderWidth: 3,
+                            pointRadius: 4,
+                            pointHoverRadius: 6,
+                            pointBackgroundColor: colors.success,
+                            pointBorderColor: '#111827'
+                        },
+                        {
+                            label: 'Expenses',
+                            data: trend.expenses || [],
+                            borderColor: colors.danger,
+                            backgroundColor: colors.danger + '20',
+                            fill: true,
+                            tension: 0.4,
+                            borderWidth: 3,
+                            pointRadius: 4,
+                            pointHoverRadius: 6,
+                            pointBackgroundColor: colors.danger,
+                            pointBorderColor: '#111827'
+                        }
+                    ]
+                },
+                options: {
+                    responsive: true,
+                    maintainAspectRatio: false,
+                    interaction: { mode: 'index', intersect: false },
+                    plugins: {
+                        legend: {
+                            position: 'bottom',
+                            labels: {
+                                padding: 15,
+                                usePointStyle: true,
+                                color: '#9ca3af'
+                            }
+                        },
+                        tooltip: {
+                            backgroundColor: '#1f2937',
+                            titleColor: '#fff',
+                            bodyColor: '#9ca3af',
+                            borderColor: '#374151',
+                            borderWidth: 1,
+                            callbacks: {
+                                label: function(context) {
+                                    const value = context.parsed && context.parsed.y !== undefined ? context.parsed.y : context.parsed;
+                                    return context.dataset.label + ': ₱' + Number(value || 0).toLocaleString();
+                                }
+                            }
+                        }
+                    },
+                    scales: {
+                        y: {
+                            beginAtZero: true,
+                            grid: { color: '#1f2937' },
+                            ticks: {
+                                color: '#9ca3af',
+                                callback: function(value) { return '₱' + value.toLocaleString(); }
+                            }
+                        },
+                        x: {
+                            grid: { display: false },
+                            ticks: { color: '#9ca3af' }
+                        }
+                    }
+                }
+            });
+        } catch (e) {
+            console.error('Failed to init incomeVsExpenses chart', e);
+        }
+
+        // ---------- Budget Performance (bar) ----------
+        try {
+            const ctx3 = document.getElementById('chart-budget-performance').getContext('2d');
+            const bpLabels = budgetPerf.labels || [];
+            const budgets = budgetPerf.budgets || [];
+            const spent = budgetPerf.spent || [];
+            const barColors = getColorsForCount(bpLabels.length);
+
+            chartInstances.budgetPerformance = new Chart(ctx3, {
+                type: 'bar',
+                data: {
+                    labels: bpLabels,
+                    datasets: [
+                        { label: 'Budget', data: budgets, backgroundColor: barColors.map(c => c + '33'), borderColor: barColors, borderWidth: 1 },
+                        { label: 'Spent', data: spent, backgroundColor: barColors.map(c => c + '99'), borderColor: barColors, borderWidth: 1 }
+                    ]
+                },
+                options: {
+                    responsive: true,
+                    maintainAspectRatio: false,
+                    plugins: {
+                        legend: { position: 'bottom', labels: { color: '#9ca3af' } },
+                        tooltip: {
+                            backgroundColor: '#1f2937',
+                            titleColor: '#fff',
+                            bodyColor: '#9ca3af',
+                            borderColor: '#374151',
+                            borderWidth: 1,
+                            callbacks: {
+                                label: function(context){
+                                    const value = context.parsed.y !== undefined ? context.parsed.y : context.parsed;
+                                    return context.dataset.label + ': ₱' + Number(value || 0).toLocaleString();
+                                }
+                            }
+                        }
+                    },
+                    scales: {
+                        y: { beginAtZero: true, ticks: { color: '#9ca3af', callback: v => '₱' + v.toLocaleString() }, grid: { color: '#1f2937' } },
+                        x: { ticks: { color: '#9ca3af' }, grid: { display: false } }
+                    }
+                }
+            });
+        } catch (e) {
+            console.error('Failed to init budgetPerformance chart', e);
+        }
+
+        // ---------- Daily Net Flow (line) ----------
+        try {
+            const ctx4 = document.getElementById('chart-daily-net').getContext('2d');
+            chartInstances.dailyNet = new Chart(ctx4, {
+                type: 'line',
+                data: {
+                    labels: daily.labels || [],
+                    datasets: [{
+                        label: 'Daily Net',
+                        data: daily.net || [],
+                        borderColor: colors.primary,
+                        backgroundColor: colors.primary + '20',
                         fill: true,
-                        tension: 0.4,
-                        borderWidth: 3,
-                        pointRadius: 4,
-                        pointHoverRadius: 6,
-                        pointBackgroundColor: colors.success,
-                        pointBorderColor: '#111827'
-                    },
-                    { 
-                        label: 'Expenses', 
-                        data: trend.expenses || [], 
-                        borderColor: colors.danger,
-                        backgroundColor: colors.danger + '20',
-                        fill: true,
-                        tension: 0.4,
-                        borderWidth: 3,
-                        pointRadius: 4,
-                        pointHoverRadius: 6,
-                        pointBackgroundColor: colors.danger,
-                        pointBorderColor: '#111827'
-                    }
-                ]
-            },
-            options: {
-                responsive: true,
-                maintainAspectRatio: false,
-                interaction: {
-                    mode: 'index',
-                    intersect: false,
+                        tension: 0.2,
+                        borderWidth: 2,
+                        pointRadius: 2
+                    }]
                 },
-                plugins: {
-                    legend: {
-                        position: 'bottom',
-                        labels: {
-                            padding: 15,
-                            usePointStyle: true,
-                            color: '#9ca3af'
-                        }
-                    },
-                    tooltip: {
-                        backgroundColor: '#1f2937',
-                        titleColor: '#fff',
-                        bodyColor: '#9ca3af',
-                        borderColor: '#374151',
-                        borderWidth: 1,
-                        callbacks: {
-                            label: function(context) {
-                                return context.dataset.label + ': ₱' + context.parsed.y.toLocaleString();
+                options: {
+                    responsive: true,
+                    maintainAspectRatio: false,
+                    plugins: {
+                        legend: { display: false },
+                        tooltip: {
+                            backgroundColor: '#1f2937',
+                            titleColor: '#fff',
+                            bodyColor: '#9ca3af',
+                            borderColor: '#374151',
+                            borderWidth: 1,
+                            callbacks: {
+                                label: function(context) {
+                                    const value = context.parsed && context.parsed.y !== undefined ? context.parsed.y : context.parsed;
+                                    return '₱' + Number(value || 0).toLocaleString();
+                                }
                             }
                         }
-                    }
-                },
-                scales: {
-                    y: {
-                        beginAtZero: true,
-                        grid: { color: '#1f2937' },
-                        ticks: {
-                            color: '#9ca3af',
-                            callback: function(value) { return '₱' + value.toLocaleString(); }
-                        }
                     },
-                    x: {
-                        grid: { display: false },
-                        ticks: { color: '#9ca3af' }
+                    scales: {
+                        y: { beginAtZero: true, ticks: { color: '#9ca3af', callback: v => '₱' + v.toLocaleString() }, grid: { color: '#1f2937' } },
+                        x: { ticks: { color: '#9ca3af' }, grid: { display: false } }
                     }
                 }
-            }
-        });
-
-        // Budget performance - Bar
-        const ctx3 = document.getElementById('chart-budget-performance').getContext('2d');
-        chartInstances.budgetPerformance = new Chart(ctx3, {
-            type: 'bar',
-            data: {
-                labels: budgetPerf.labels || [],
-                datasets: [
-                    { 
-                        label: 'Budget', 
-                        data: budgetPerf.budgets || [], 
-                        backgroundColor: colors.primary + 'cc',
-                        borderRadius: 6
-                    },
-                    { 
-                        label: 'Spent', 
-                        data: budgetPerf.spent || [], 
-                        backgroundColor: colors.danger + 'cc',
-                        borderRadius: 6
-                    }
-                ]
-            },
-            options: {
-                responsive: true,
-                maintainAspectRatio: false,
-                plugins: {
-                    legend: {
-                        position: 'bottom',
-                        labels: {
-                            padding: 15,
-                            usePointStyle: true,
-                            color: '#9ca3af'
-                        }
-                    },
-                    tooltip: {
-                        backgroundColor: '#1f2937',
-                        titleColor: '#fff',
-                        bodyColor: '#9ca3af',
-                        borderColor: '#374151',
-                        borderWidth: 1,
-                        callbacks: {
-                            label: function(context) {
-                                return context.dataset.label + ': ₱' + context.parsed.y.toLocaleString();
-                            }
-                        }
-                    }
-                },
-                scales: {
-                    y: {
-                        beginAtZero: true,
-                        grid: { color: '#1f2937' },
-                        ticks: {
-                            color: '#9ca3af',
-                            callback: function(value) { return '₱' + value.toLocaleString(); }
-                        }
-                    },
-                    x: {
-                        grid: { display: false },
-                        ticks: { color: '#9ca3af' }
-                    }
-                }
-            }
-        });
-
-        // Daily net - Bar with conditional colors
-        const ctx4 = document.getElementById('chart-daily-net').getContext('2d');
-        chartInstances.dailyNet = new Chart(ctx4, {
-            type: 'bar',
-            data: {
-                labels: daily.labels || [],
-                datasets: [{
-                    label: 'Daily Net',
-                    data: daily.net || [],
-                    backgroundColor: function(context) {
-                        const value = context.parsed.y;
-                        return value < 0 ? colors.danger + 'cc' : colors.success + 'cc';
-                    },
-                    borderRadius: 6,
-                    borderSkipped: false
-                }]
-            },
-            options: {
-                responsive: true,
-                maintainAspectRatio: false,
-                plugins: {
-                    legend: { display: false },
-                    tooltip: {
-                        backgroundColor: '#1f2937',
-                        titleColor: '#fff',
-                        bodyColor: '#9ca3af',
-                        borderColor: '#374151',
-                        borderWidth: 1,
-                        callbacks: {
-                            label: function(context) {
-                                const value = context.parsed.y;
-                                const prefix = value >= 0 ? '+' : '';
-                                return 'Net: ' + prefix + '₱' + value.toLocaleString();
-                            }
-                        }
-                    }
-                },
-                scales: {
-                    y: {
-                        beginAtZero: true,
-                        grid: { color: '#1f2937' },
-                        ticks: {
-                            color: '#9ca3af',
-                            callback: function(value) { return '₱' + value.toLocaleString(); }
-                        }
-                    },
-                    x: {
-                        grid: { display: false },
-                        ticks: { color: '#9ca3af' }
-                    }
-                }
-            }
-        });
+            });
+        } catch (e) {
+            console.error('Failed to init dailyNet chart', e);
+        }
     })();
 
-    // Set current date in header
-    document.getElementById('currentDate').textContent = new Date().toLocaleString('default', { month: 'long', year: 'numeric' });
+    // ----------------- Period header -----------------
+    const fromMonth = "{{ $fromMonth ?? '' }}";
+    const toMonth = "{{ $toMonth ?? '' }}";
+
+    if (fromMonth && toMonth) {
+        try {
+            const from = new Date(fromMonth + '-01');
+            const to = new Date(toMonth + '-01');
+
+            if (fromMonth === toMonth) {
+                document.getElementById('currentDate').textContent = from.toLocaleString('default', { month: 'long', year: 'numeric' });
+            } else {
+                const fromStr = from.toLocaleString('default', { month: 'short', year: 'numeric' });
+                const toStr = to.toLocaleString('default', { month: 'short', year: 'numeric' });
+                document.getElementById('currentDate').textContent = `${fromStr} - ${toStr}`;
+            }
+        } catch (e) {
+            document.getElementById('currentDate').textContent = new Date().toLocaleString('default', { month: 'long', year: 'numeric' });
+        }
+    } else {
+        document.getElementById('currentDate').textContent = new Date().toLocaleString('default', { month: 'long', year: 'numeric' });
+    }
+
+    // ----------------- Period modal functions -----------------
+    function openPeriodModal() {
+        const modal = document.getElementById('periodModal');
+        modal.classList.add('show');
+
+        const now = new Date();
+        const currentMonth = now.toISOString().slice(0, 7);
+
+        if (!document.getElementById('fromMonth').value) {
+            document.getElementById('fromMonth').value = currentMonth;
+        }
+        if (!document.getElementById('toMonth').value) {
+            document.getElementById('toMonth').value = currentMonth;
+        }
+    }
+
+    function closePeriodModal() {
+        const modal = document.getElementById('periodModal');
+        modal.classList.remove('show');
+    }
+
+    // pass `this` from the onclick to reliably highlight
+    function selectQuickPeriod(period, el) {
+        const now = new Date();
+        let fromDate, toDate;
+
+        switch(period) {
+            case 'current':
+                fromDate = new Date(now.getFullYear(), now.getMonth(), 1);
+                toDate = now;
+                break;
+            case 'last':
+                fromDate = new Date(now.getFullYear(), now.getMonth() - 1, 1);
+                toDate = new Date(now.getFullYear(), now.getMonth(), 0);
+                break;
+            case 'last3':
+                fromDate = new Date(now.getFullYear(), now.getMonth() - 2, 1);
+                toDate = now;
+                break;
+            case 'last6':
+                fromDate = new Date(now.getFullYear(), now.getMonth() - 5, 1);
+                toDate = now;
+                break;
+            case 'ytd':
+                fromDate = new Date(now.getFullYear(), 0, 1);
+                toDate = now;
+                break;
+            default:
+                fromDate = new Date(now.getFullYear(), now.getMonth(), 1);
+                toDate = now;
+        }
+
+        document.getElementById('fromMonth').value = fromDate.toISOString().slice(0, 7);
+        document.getElementById('toMonth').value = toDate.toISOString().slice(0, 7);
+
+        document.querySelectorAll('.quick-select-btn').forEach(btn => btn.classList.remove('active'));
+        if (el && el.classList) el.classList.add('active');
+    }
+
+    function applyPeriodFilter() {
+        const fromMonthVal = document.getElementById('fromMonth').value;
+        const toMonthVal = document.getElementById('toMonth').value;
+
+        if (!fromMonthVal || !toMonthVal) {
+            alert('Please select both from and to months');
+            return;
+        }
+
+        if (fromMonthVal > toMonthVal) {
+            alert('From month cannot be after to month');
+            return;
+        }
+
+        // Show loading
+        showLoading();
+
+        // Redirect with 'from' and 'to' params (YYYY-MM)
+        const url = new URL(window.location.href);
+        url.searchParams.set('from', fromMonthVal);
+        url.searchParams.set('to', toMonthVal);
+        window.location.href = url.toString();
+    }
+
+    // Close modal when clicking outside
+    document.addEventListener('click', function(e) {
+        const modal = document.getElementById('periodModal');
+        if (modal && e.target === modal) {
+            closePeriodModal();
+        }
+    });
 
     // Export dropdown toggle
     document.getElementById('exportButton').addEventListener('click', function(e) {
@@ -682,10 +982,11 @@
         }
     });
 
-    // Export functions
+    // Exports (unchanged except kept here for context)
     function showLoading() {
         document.getElementById('exportLoading').classList.add('show');
-        document.getElementById('exportMenu').classList.remove('show');
+        const menu = document.getElementById('exportMenu');
+        if (menu) menu.classList.remove('show');
     }
 
     function hideLoading() {
@@ -694,7 +995,7 @@
 
     async function exportAsPDF() {
         showLoading();
-        
+
         try {
             const element = document.getElementById('analytics-report');
             const canvas = await html2canvas(element, {
@@ -740,7 +1041,7 @@
 
     async function exportAsPNG() {
         showLoading();
-        
+
         try {
             const element = document.getElementById('analytics-report');
             const canvas = await html2canvas(element, {
@@ -769,7 +1070,7 @@
 
     async function exportChartsOnly() {
         showLoading();
-        
+
         try {
             const { jsPDF } = window.jspdf;
             const pdf = new jsPDF({
@@ -787,15 +1088,15 @@
 
             for (let i = 0; i < charts.length; i++) {
                 if (i > 0) pdf.addPage();
-                
+
                 const canvas = document.getElementById(charts[i].id);
                 const imgData = canvas.toDataURL('image/png');
-                
+
                 // Add title
                 pdf.setFontSize(16);
                 pdf.setTextColor(255, 255, 255);
                 pdf.text(charts[i].title, 105, 20, { align: 'center' });
-                
+
                 // Add chart image
                 const imgWidth = 180;
                 const imgHeight = (canvas.height * imgWidth) / canvas.width;

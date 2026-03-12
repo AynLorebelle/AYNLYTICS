@@ -423,7 +423,7 @@
                 </path>
             </svg>
             <!-- Optional: Notification badge -->
-            <span class="notification-badge">3</span>
+            <span id="notificationBadge" class="notification-badge" style="display: none;">0</span>
         </button>
     </a>
 
@@ -499,15 +499,24 @@
         </svg>
         <span>Income</span>
     </a>
+
+        <a class="nav-link menu-item" href="{{ route('logout') }}" onclick="setActive(6)">
+        @csrf
+        <svg xmlns="www.w3.org" class="icon" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="2">
+          <path stroke-linecap="round" stroke-linejoin="round" d="M11 16l-4-4m0 0l4-4m-4 4h14m-5 4v1a3 3 0 01-3 3H6a3 3 0 01-3-3V7a3 3 0 013-3h2.5" />
+        </svg>
+        <span> Logout </span>
+    </a>
     
             </nav>
         </div>
     </header>
       
-
+<div class="toast-container position-fixed bottom-0 end-0 p-3">
+    @include('partials.alerts')
+</div>
       
     <section class="col-md-9">
-      @include('partials.alerts')
       @yield('content')
     </section>
   </div>
@@ -516,11 +525,21 @@
 <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/js/bootstrap.bundle.min.js"></script>
 <script src="https://cdn.jsdelivr.net/npm/chart.js@4.4.0/dist/chart.umd.min.js"></script>
 <script>
+
+      document.addEventListener('DOMContentLoaded', (event) => {
+        var toastElList = [].slice.call(document.querySelectorAll('.toast'));
+        var toastList = toastElList.map(function(toastEl) {
+            return new bootstrap.Toast(toastEl);
+        });
+        toastList.forEach(toast => toast.show());
+    });
+
     function toggleMenu() {
       const menu = document.getElementById('menu');
       if (!menu) return;
       menu.classList.toggle('hidden');
     }
+
   document.addEventListener('DOMContentLoaded', function(){
     var offcanvasEl = document.getElementById('offcanvasSidebar');
     if (offcanvasEl) {
@@ -533,6 +552,70 @@
     }
   });
 </script>
+
+   <script>
+        function toggleMenu() {
+            const menu = document.getElementById('menu');
+            menu.classList.toggle('hidden');
+        }
+
+        function setActive(index) {
+            const items = document.querySelectorAll('.menu-item');
+            items.forEach((item, i) => {
+                if (i === index) {
+                    item.classList.add('active');
+                } else {
+                    item.classList.remove('active');
+                }
+            });
+            toggleMenu();
+        }
+
+        // Notification handling
+        document.getElementById('notificationButton').addEventListener('click', function(e) {
+            // Badge will automatically become 0 when visiting notifications page
+            // because NotificationController returns unreadCount = 0
+        });
+
+        // Auto-refresh notification count every 30 seconds
+        async function refreshNotificationCount() {
+            try {
+                const response = await fetch('/notifications/unread-count');
+                const data = await response.json();
+                
+                const badge = document.getElementById('notificationBadge');
+                if (badge) {
+                    if (data.count > 0) {
+                        badge.textContent = data.count;
+                        badge.style.display = 'block';
+                    } else {
+                        badge.style.display = 'none';
+                    }
+                }
+            } catch (error) {
+                console.error('Error fetching unread count:', error);
+            }
+        }
+
+        // Refresh every 30 seconds
+        setInterval(refreshNotificationCount, 30000);
+
+        // Helper functions
+        function fmt(amount) {
+            if (amount === null || amount === undefined) return '₱0.00';
+            return '₱' + Number(amount).toLocaleString(undefined, {minimumFractionDigits: 2, maximumFractionDigits: 2});
+        }
+
+        function showLoaded(canvasId) {
+            const canvas = document.querySelector(canvasId);
+            if (!canvas) return;
+            const loader = document.querySelector('.loader[data-target="'+canvasId+'"]');
+            if (loader) loader.style.display = 'none';
+            canvas.style.display = 'block';
+        }
+    </script>
+
+
 @stack('scripts')
 <script>
     // Prevent double-submits: disable the submit button and change text when a form is submitted

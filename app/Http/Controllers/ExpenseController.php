@@ -5,7 +5,9 @@ namespace App\Http\Controllers;
 use App\Http\Requests\ExpenseRequest;
 use App\Models\Category;
 use App\Models\Expense;
+use App\Models\Income;
 use Illuminate\Http\Request;
+use Illuminate\Support\Carbon;
 
 class ExpenseController extends Controller
 {
@@ -18,7 +20,8 @@ class ExpenseController extends Controller
     {
         $user = $request->user();
         $expenses = Expense::with('category')->where('user_id', $user->id)->latest()->paginate(20);
-        return view('expenses.index', compact('expenses'));
+        $unreadCount = Expense::where('user_id', $user->id)->whereDate('created_at', Carbon::today())->count() + Income::where('user_id', $user->id)->whereDate('created_at', Carbon::today())->count();
+        return view('expenses.index', compact('expenses', 'unreadCount'));
     }
 
     public function create()

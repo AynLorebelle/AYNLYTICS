@@ -379,6 +379,20 @@
         .hidden {
             display: none;
         }
+         .notification-badge {
+            position: absolute;
+            top: 4px;
+            right: 4px;
+            background-color: #ef4444;
+            color: white;
+            font-size: 10px;
+            font-weight: bold;
+            padding: 2px 5px;
+            border-radius: 10px;
+            min-width: 16px;
+            text-align: center;
+            display: {{ $unreadCount > 0 ? 'block' : 'none' }};
+        }
     </style>
 </head>
 <body>
@@ -406,17 +420,16 @@
           
         </button>
    </a>
-                <a href="{{ route('notifications') }}" class="position-relative">
-                <button class="header-icon " onclick="toggleNotifications()">
-            <svg class="icon" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" 
-                      d="M15 17h5l-1.405-1.405A2.032 2.032 0 0118 14.158V11a6.002 6.002 0 00-4-5.659V5a2 2 0 10-4 0v.341C7.67 6.165 6 8.388 6 11v3.159c0 .538-.214 1.055-.595 1.436L4 17h5m6 0v1a3 3 0 11-6 0v-1m6 0H9">
-                </path>
-            </svg>
-            <!-- Optional: Notification badge -->
-            <span class="notification-badge">3</span>
-        </button>
-    </a>
+                 <a href="{{ route('notifications') }}" class="position-relative">
+                        <button class="header-icon" id="notificationButton">
+                            <svg class="icon" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" 
+                                      d="M15 17h5l-1.405-1.405A2.032 2.032 0 0118 14.158V11a6.002 6.002 0 00-4-5.659V5a2 2 0 10-4 0v.341C7.67 6.165 6 8.388 6 11v3.159c0 .538-.214 1.055-.595 1.436L4 17h5m6 0v1a3 3 0 11-6 0v-1m6 0H9">
+                                </path>
+                            </svg>
+                            <span class="notification-badge" id="notificationBadge">{{ $unreadCount }}</span>
+                        </button>
+                    </a>
 
                 <button class="header-icon menu " onclick="toggleMenu()">
             <svg class="icon" fill="none" stroke="currentColor" viewBox="0 0 24 24">
@@ -488,6 +501,14 @@
             <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 12l2 2 4-4m6 2a9 9 0 11-18 0 9 9 0 0118 0z"/>
         </svg>
         <span>Income</span>
+    </a>
+        
+    <a class="nav-link menu-item" href="{{ route('logout') }}" onclick="setActive(6)">
+        @csrf
+        <svg xmlns="www.w3.org" class="icon" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="2">
+          <path stroke-linecap="round" stroke-linejoin="round" d="M11 16l-4-4m0 0l4-4m-4 4h14m-5 4v1a3 3 0 01-3 3H6a3 3 0 01-3-3V7a3 3 0 013-3h2.5" />
+        </svg>
+        <span> Logout </span>
     </a>
     
             </nav>
@@ -635,7 +656,7 @@
 </main>
    
 
-    <script>
+   <script>
         function toggleMenu() {
             const menu = document.getElementById('menu');
             menu.classList.toggle('hidden');
@@ -651,16 +672,78 @@
                 }
             });
             toggleMenu();
-        }    
-    </script>
-    <script>
-        // Small helper: format currency
+        }
+
+        // Notification handling
+        let notificationClicked = false;
+        document.getElementById('notificationButton').addEventListener('click', function(e) {
+            // Clear badge when clicking notification button
+            const badge = document.getElementById('notificationBadge');
+            if (badge) {
+                badge.style.display = 'none';
+                badge.textContent = '0';
+            }
+            localStorage.removeItem('notificationCount');
+            notificationClicked = true;
+            // Reset flag after 100ms to allow new transactions to show badge
+            setTimeout(() => { notificationClicked = false; }, 100);
+        });
+
+        // Auto-refresh notification count every 3 seconds
+        async function refreshNotificationCount() {
+            // Don't refresh if user just clicked notification button
+            if (notificationClicked) {
+                return;
+            }
+            try {
+                const response = await fetch('/notifications/unread-count');
+                const data = await response.json();
+                
+                const badge = document.getElementById('notificationBadge');
+                if (badge) {
+                    if (data.count > 0) {
+                        badge.textContent = data.count;
+                        badge.style.display = 'block';
+                        localStorage.setItem('notificationCount', data.count);
+                    } else {
+                        const savedCount = localStorage.getItem('notificationCount');
+                        if (window.location.pathname.includes('/notifications')) {
+                            badge.style.display = 'none';
+                            localStorage.removeItem('notificationCount');
+                        } else if (savedCount && parseInt(savedCount) > 0) {
+                            badge.textContent = savedCount;
+                            badge.style.display = 'block';
+                        } else {
+                            badge.style.display = 'none';
+                        }
+                    }
+                }
+            } catch (error) {
+                console.error('Error fetching unread count:', error);
+            }
+        }
+
+        // Initialize from localStorage on page load
+        function initNotificationBadge() {
+            const savedCount = localStorage.getItem('notificationCount');
+            const badge = document.getElementById('notificationBadge');
+            if (savedCount && parseInt(savedCount) > 0 && badge) {
+                badge.textContent = savedCount;
+                badge.style.display = 'block';
+            }
+        }
+        initNotificationBadge();
+
+        // Refresh every 3 seconds for real-time updates
+        setInterval(refreshNotificationCount, 3000);
+        refreshNotificationCount();
+
+        // Helper functions
         function fmt(amount) {
             if (amount === null || amount === undefined) return '₱0.00';
             return '₱' + Number(amount).toLocaleString(undefined, {minimumFractionDigits: 2, maximumFractionDigits: 2});
         }
 
-        // Helper: show / hide loading
         function showLoaded(canvasId) {
             const canvas = document.querySelector(canvasId);
             if (!canvas) return;
@@ -668,9 +751,6 @@
             if (loader) loader.style.display = 'none';
             canvas.style.display = 'block';
         }
-
-
-        
     </script>
 
 </body>

@@ -3,14 +3,19 @@
 @section('title','View Expense')
 
 @section('content')
-  <h3>Expense</h3>
-  <div class="card">
+<div class="d-flex justify-content-between align-items-center mb-3 mt-3">
+ <h3  class="btn ayn-cta2"><i class="me-1"></i>Expense Details</h3>
+ <a href="{{ route('expenses.index') }}" class="btn ayn-cta"><i class="bi bi-arrow-left-lg me-1"></i>Back to Expenses</a>
+</div>
+  <div class="card dark-card">
     <div class="card-body">
-      <p><strong>Date:</strong> {{ $expense->transaction_date->format('Y-m-d') }}</p>
-      <p><strong>Category:</strong> {{ $expense->category->name ?? '—' }}</p>
-      <p><strong>Amount:</strong> &#8369;{{ number_format($expense->amount,2) }}</p>
-      <p><strong>Description:</strong><br>{{ $expense->description }}</p>
-      <a href="{{ route('expenses.index') }}" class="btn btn-secondary">Back</a>
+      <h5 class="card-title">Amount: ${{ number_format($expense->amount,2) }}</h5>
+      <p class="card-text"><strong>Date:</strong> {{ $expense->transaction_date->format('Y-m-d') }}</p>
+      <p class="card-text"><strong>Category:</strong> {{ $expense->category->name }}</p>
+      @if($expense->notes)
+        <p class="card-text"><strong>Notes:</strong> {{ $expense->notes }}</p>
+      @endif
+     
     </div>
   </div>
 @endsection
