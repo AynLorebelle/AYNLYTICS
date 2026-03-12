@@ -39,21 +39,9 @@ class AIChatController extends Controller
     }
 
     private function getGroqApiKey(): string
-    {
-        return cache()->remember('groq_api_key', now()->addHours(24), function () {
-            $response = Http::withHeaders([
-                'apikey'        => config('services.supabase.service_role_key'),
-                'Authorization' => 'Bearer ' . config('services.supabase.service_role_key'),
-            ])->get(config('services.supabase.url') . '/rest/v1/rpc/get_secret', [
-                'secret_name' => 'Aynlytics'
-            ]);
-
-            $key = $response->json('secret');
-
-            // Fallback to .env if Supabase secret fetch fails
-            return $key ?? config('services.groq.key');
-        });
-    }
+{
+    return config('services.groq.key');
+}
 
     private function getUserFinancialData($userId): array
     {
