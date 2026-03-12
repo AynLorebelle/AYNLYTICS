@@ -210,14 +210,15 @@ protected function getBudgetPerformance($userId, Carbon $start, Carbon $end)
         $incomeByDay = array_fill(0, $daysInMonth, 0.0);
 
         $expRows = DB::table('expenses')
-            ->select(DB::raw('DAY(transaction_date) as day'), DB::raw('SUM(amount) as total'))
+            ->select(DB::raw('EXTRACT(DAY FROM transaction_date) as day'), DB::raw('SUM(amount) as total'))
             ->where('user_id', $userId)
             ->whereNull('deleted_at')
             ->whereYear('transaction_date', $year)
             ->whereMonth('transaction_date', $month)
-            ->groupByRaw('DAY(transaction_date)')
+            ->groupByRaw('EXTRACT(DAY FROM transaction_date)')
             ->get();
 
+        
         foreach ($expRows as $r) {
             $idx = ((int) $r->day) - 1;
             if ($idx >= 0 && $idx < $daysInMonth) {
@@ -226,14 +227,14 @@ protected function getBudgetPerformance($userId, Carbon $start, Carbon $end)
         }
 
         $incRows = DB::table('incomes')
-            ->select(DB::raw('DAY(transaction_date) as day'), DB::raw('SUM(amount) as total'))
+            ->select(DB::raw('EXTRACT(DAY FROM transaction_date) as day'), DB::raw('SUM(amount) as total'))
             ->where('user_id', $userId)
             ->whereNull('deleted_at')
             ->whereYear('transaction_date', $year)
             ->whereMonth('transaction_date', $month)
-            ->groupByRaw('DAY(transaction_date)')
+            ->groupByRaw('EXTRACT(DAY FROM transaction_date)')
             ->get();
-
+            
         foreach ($incRows as $r) {
             $idx = ((int) $r->day) - 1;
             if ($idx >= 0 && $idx < $daysInMonth) {
