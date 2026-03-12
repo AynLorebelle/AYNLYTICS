@@ -34,5 +34,12 @@ return [
             'channel' => env('SLACK_BOT_USER_DEFAULT_CHANNEL'),
         ],
     ],
+    'groq' => [
+        'api_key' => env('GROQ_API_KEY'),
+    ],
+    'supabase' => [
+    'url'               => env('SUPABASE_URL'),
+    'service_role_key'  => env('SUPABASE_SERVICE_ROLE_KEY'),
+],
 
 ];

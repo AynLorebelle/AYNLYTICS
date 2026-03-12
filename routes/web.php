@@ -15,6 +15,7 @@ use App\Http\Controllers\AnalyticsController;
 use App\Http\Controllers\NotificationController;
 use App\Http\Controllers\Auth\AdminRegisterController;
 use App\Http\Controllers\Admin\AdminDashboardController;
+use App\Http\Controllers\AIChatController;
 
 Route::get('/', function () {
     return view('welcome');
@@ -30,6 +31,7 @@ Route::middleware('guest')->group(function () {
 
 Route::middleware('auth')->group(function () {
     // Profile routes
+    Route::middleware('auth')->post('/ai/chat', [AIChatController::class, 'chat']);
     Route::get('/profile', [ProfileController::class, 'edit'])->name('profile.edit');
     Route::patch('/profile', [ProfileController::class, 'update'])->name('profile.update');
     Route::delete('/profile', [ProfileController::class, 'destroy'])->name('profile.destroy');
