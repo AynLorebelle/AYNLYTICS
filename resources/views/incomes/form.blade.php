@@ -31,8 +31,6 @@
   @error('description')<div class="text-danger small mt-1">{{ $message }}</div>@enderror
 </div>
 
-
-
 {{-- ========== START: CHOICES.JS CUSTOM DROPDOWN ========== --}}
 {{-- This section adds the custom dropdown styling with hover effects --}}
 @once
