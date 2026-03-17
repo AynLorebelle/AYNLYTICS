@@ -7,6 +7,7 @@ use Illuminate\Support\Facades\Http;
 
 class AIChatController extends Controller
 {
+    //Chabot IS RAG
     public function chat(Request $request)
     {
         try {
