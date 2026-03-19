@@ -9,13 +9,18 @@ return new class extends Migration
     /**
      * Run the migrations.
      */
-    public function up(): void
-    {
-        Schema::create('savings_contributions', function (Blueprint $table) {
-            $table->id();
-            $table->timestamps();
-        });
-    }
+public function up(): void
+{
+    Schema::create('savings_contributions', function (Blueprint $table) {
+        $table->id();
+        $table->foreignId('savings_goal_id')->constrained()->onDelete('cascade');
+        $table->foreignId('user_id')->constrained()->onDelete('cascade');
+        $table->decimal('amount', 12, 2);
+        $table->date('contributed_at');
+        $table->text('notes')->nullable();
+        $table->timestamps();
+    });
+}
 
     /**
      * Reverse the migrations.

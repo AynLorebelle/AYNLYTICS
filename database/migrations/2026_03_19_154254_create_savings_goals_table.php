@@ -10,12 +10,19 @@ return new class extends Migration
      * Run the migrations.
      */
     public function up(): void
-    {
-        Schema::create('savings_goals', function (Blueprint $table) {
-            $table->id();
-            $table->timestamps();
-        });
-    }
+{
+    Schema::create('savings_goals', function (Blueprint $table) {
+        $table->id();
+        $table->foreignId('user_id')->constrained()->onDelete('cascade');
+        $table->string('name');
+        $table->decimal('target_amount', 12, 2);
+        $table->decimal('monthly_percent', 5, 2)->nullable();
+        $table->date('target_date')->nullable();
+        $table->enum('status', ['active', 'completed', 'cancelled'])->default('active');
+        $table->text('notes')->nullable();
+        $table->timestamps();
+    });
+}
 
     /**
      * Reverse the migrations.
