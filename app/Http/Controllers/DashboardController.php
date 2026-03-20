@@ -8,6 +8,7 @@ use App\Models\Income;
 use App\Models\Category;
 use Illuminate\Support\Carbon;
 use Illuminate\Http\Request;
+use App\Models\SavingsGoal;
 
 class DashboardController extends Controller
 {
@@ -125,14 +126,31 @@ class DashboardController extends Controller
 
         // sort and take 10 (most recent first)
         $recentTransactions = $transactions->sortByDesc('transaction_date')->slice(0, 10)->values();
+        // Savings goals summary
+$savingsGoals = SavingsGoal::where('user_id', $user->id)
+    ->where('status', 'active')
+    ->orderBy('created_at', 'desc')
+    ->take(3)
+    ->get()
+    ->map(function ($goal) {
+        return [
+            'id'               => $goal->id,
+            'name'             => $goal->name,
+            'target_amount'    => $goal->target_amount,
+            'total_saved'      => $goal->totalSaved(),
+            'progress_percent' => $goal->progressPercent(),
+            'remaining'        => $goal->remaining(),
+            'target_date'      => $goal->target_date,
+        ];
+    });
 
         // ADD remainingBudget and unreadCount to the view data
         return view('dashboard', compact(
-            'totalExpenses', 'totalIncomes', 'totalBudgets', 'remainingBudget',
-            'prevExpenses', 'prevIncomes', 'prevBudgets',
-            'budgetChange', 'incomeChange', 'expenseChange', 'savingsPercent', 'savingsChange',
-            'recentTransactions', 'unreadCount'
-        ));
+    'totalExpenses', 'totalIncomes', 'totalBudgets', 'remainingBudget',
+    'prevExpenses', 'prevIncomes', 'prevBudgets',
+    'budgetChange', 'incomeChange', 'expenseChange', 'savingsPercent', 'savingsChange',
+    'recentTransactions', 'unreadCount', 'savingsGoals'
+));
     }
 
     /**
