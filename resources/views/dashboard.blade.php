@@ -124,5 +124,50 @@
             </div>
         </div>
     </div>
+    {{-- Savings Goals Widget --}}
+@if(isset($savingsGoals) && $savingsGoals->count() > 0)
+<div class="content-grid" style="margin-top: 24px;">
+    <div class="content-card">
+        <div class="card-header">
+            <h3><i class="bi bi-piggy-bank me-2" style="color:#06b6d4;"></i>Savings Goals</h3>
+            <a href="{{ route('savings.index') }}" style="color:#06b6d4; font-size:14px; text-decoration:none;">
+                View all →
+            </a>
+        </div>
+
+        @foreach($savingsGoals as $goal)
+        <div style="margin-bottom: 1.25rem; padding-bottom: 1.25rem; border-bottom: 1px solid #1f2937;">
+            <div style="display:flex; justify-content:space-between; align-items:center; margin-bottom:6px;">
+                <span style="color:#ffffff; font-weight:600; font-size:14px;">{{ $goal['name'] }}</span>
+                <span style="color:#9ca3af; font-size:13px;">
+                    ₱{{ number_format($goal['total_saved'], 2) }} / ₱{{ number_format($goal['target_amount'], 2) }}
+                </span>
+            </div>
+
+            {{-- Progress bar --}}
+            <div style="background:#1f2937; border-radius:999px; height:8px; overflow:hidden;">
+                <div style="height:100%; border-radius:999px; width:{{ $goal['progress_percent'] }}%;
+                            background: linear-gradient(90deg, #06b6d4, #0891b2); transition: width 0.6s ease;">
+                </div>
+            </div>
+
+            <div style="display:flex; justify-content:space-between; margin-top:5px; font-size:12px;">
+                <span style="color:#06b6d4; font-weight:600;">{{ $goal['progress_percent'] }}% complete</span>
+                <span style="color:#9ca3af;">
+                    ₱{{ number_format($goal['remaining'], 2) }} remaining
+                    @if($goal['target_date'])
+                        · {{ \Carbon\Carbon::parse($goal['target_date'])->format('M d, Y') }}
+                    @endif
+                </span>
+            </div>
+        </div>
+        @endforeach
+
+        <a href="{{ route('savings.index') }}" style="color:#06b6d4; font-size:13px; text-decoration:none;">
+            <i class="bi bi-plus-circle me-1"></i>Add a new goal
+        </a>
+    </div>
+</div>
+@endif
 </main>
 @endsection
